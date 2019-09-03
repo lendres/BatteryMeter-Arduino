@@ -22,18 +22,18 @@
 
 // Default contstructor.
 BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax) :
-  _batteryMin(batteryMin),
-  _batteryMax(batteryMax),
   _ledPins(NULL),
-  _printDebuggingMessages(false)
+  _printDebuggingMessages(false),
+  _batteryMin(batteryMin),
+  _batteryMax(batteryMax)
 {
 }
 
 BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax, bool printDebuggingMessages) :
-  _batteryMin(batteryMin),
-  _batteryMax(batteryMax),
   _ledPins(NULL),
-  _printDebuggingMessages(printDebuggingMessages)
+  _printDebuggingMessages(printDebuggingMessages),
+  _batteryMin(batteryMin),
+  _batteryMax(batteryMax)
 {
 }
 
@@ -41,17 +41,17 @@ BatteryMeter::~BatteryMeter()
 {
   if (_printDebuggingMessages)
   {
-    Serial.println("Running destructor.");
+    Serial.println("BatteryMeter destructor.");
   }
-  
+
   if (!_ledPins)
   {
-    if (_printDebuggingMessages)
-    {
-      Serial.println("Deleting LED pin array.");
-    }
-    
-    delete[] _ledPins;
+	  if (_printDebuggingMessages)
+	  {
+		  Serial.println("Deleting LED pin array.");
+	  }
+
+	  delete[] _ledPins;
   }
 }
 
@@ -92,26 +92,15 @@ void BatteryMeter::setActivationPin(MODE mode, unsigned int activationPin, uint8
 
 void BatteryMeter::setLightPins(unsigned int ledPins[], LEVEL maxLevel, uint8_t ledOnLevel)
 {
-  _maxLevel           = maxLevel;
-  _ledPins            = new unsigned int[_maxLevel];
-  _ledOnLevel         = ledOnLevel;
+	_maxLevel   = maxLevel;
+	_ledPins    = new unsigned int[_maxLevel];
+	_ledOnLevel = ledOnLevel;
 
-  // The long winded, but API appropriate way to specify write levels.
-  uint8_t initialLevel =  LOW;
-  if (_ledOnLevel == LOW)
-  {
-    initialLevel = HIGH;
-  }
-
-  // We will make a copy of the values to keep the user from accidently deleting the memory.
-  for (int i = 0; i < _maxLevel; i++)
-  {
-    _ledPins[i] = ledPins[i];
-
-    // Set up the light pins.
-    pinMode(_ledPins[i], OUTPUT);
-    digitalWrite(_ledPins[i], initialLevel);
-  }
+	// We will make a copy of the values to keep the user from accidently deleting the memory.
+	for (int i = 0; i < _maxLevel; i++)
+	{
+		_ledPins[i] = ledPins[i];
+	}
 }
 
 void BatteryMeter::begin()
@@ -119,8 +108,7 @@ void BatteryMeter::begin()
   // The width of each level is in the units read from the sensing pin.
   _levelWidth = ((float)_batteryMax - _batteryMin) / (_maxLevel);
 
-    // We we are dubugging, print the level.  LEVEL is zero based so we add one
-  // to get the human version.
+    // We we are dubugging, print info.
   if (_printDebuggingMessages)
   {
     Serial.print("Battery level reading at low: ");
@@ -223,25 +211,4 @@ BatteryMeter::LEVEL BatteryMeter::getBatteryLevel(float sensePinReading)
 
   // Something probably went wrong.
   return _maxLevel;
-}
-
-void BatteryMeter::setLights(LEVEL level)
-{
-  // Turn on the lights up to the current level.
-  for (int i = 0; i < level; i++)
-  {
-    digitalWrite(_ledPins[i], _ledOnLevel);
-  }
-
-  uint8_t ledOffLevel = LOW;
-  if (_ledOnLevel == LOW)
-  {
-    ledOffLevel = HIGH;
-  }
-
-  // Turn off the rest of the lights.
-  for (int i = level; i < _maxLevel; i++)
-  {
-    digitalWrite(_ledPins[i], ledOffLevel);
-  }
 }

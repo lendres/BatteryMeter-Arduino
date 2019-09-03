@@ -86,12 +86,16 @@ class BatteryMeter
 
   // Setup functions.  Create your instance and run these functions in your "setup" routine.
   public:
-	// Ideally, you should use the constructor for these, but if you need to modify them on the fly you can use this.
+	// Ideally, you should use the constructor for this, but if you need to modify them on the fly you can use this.
     void setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax);
+
+	// You need to set the sensing pin and activation pin.
     void setSensingPin(unsigned int sensingPin);
     void setActivationPin(MODE mode, unsigned int activationPin, uint8_t activationLevel);
-    void setLightPins(unsigned int ledPins[], LEVEL level, uint8_t ledOnLevel);
 
+	// Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
+	virtual void setLightPins(unsigned int ledPins[], LEVEL level, uint8_t ledOnLevel);
+	
     // Final initialization.
     void begin();
 
@@ -120,11 +124,25 @@ class BatteryMeter
     LEVEL getBatteryLevel(float sensePinReading);
 
     // Turns on the lights associated with the level.
-    void setLights(LEVEL level);
+    virtual void setLights(LEVEL level) = 0;
 
 
   // Members / variables.
   // The underscorde denotes a variable that belongs to the class (not a local variable).
+  protected:
+	// LED output pins.
+	unsigned int*    _ledPins;
+
+	// The level (HIGH or LOW) to use to turn the LEDs on.
+    uint8_t         _ledOnLevel;
+
+	// Number of levels which is the number of output segments or LEDs.
+	LEVEL           _maxLevel;
+
+	// Used to add debugging messages.
+	bool            _printDebuggingMessages;
+
+
   private:
     // The reading that is considered fully dischanged.  This is 2.7 volts for a lithium battery.
     unsigned int    _batteryMin;
@@ -132,17 +150,10 @@ class BatteryMeter
     // The reading that is considered fully changed.  This is 4.2 volts for a lithium battery.
     unsigned int    _batteryMax;
 
-    // Number of levels which is the number of output segments or LEDs.
-    LEVEL           _maxLevel;
-
     // Analog sensing pin.  The battery level is read from this pin.
     unsigned int    _sensingPin;
 
-    // LED output pins.
-    unsigned int    *_ledPins;
-    uint8_t         _ledOnLevel;
-
-    // Activation mode.  Specifies when the LEDs are turned on.
+    // Activation mode.  Specifies when and how the LEDs are turned on.
     MODE            _mode;
 
     // Pin for the button that turns the display (LEDs) on and off).
@@ -151,8 +162,6 @@ class BatteryMeter
 
     // The numerical value that each level has.  I.e., (batteryMax-batteryMin)/numberOfLevls.
     float           _levelWidth;
-
-    bool            _printDebuggingMessages;
 };
 
 #endif

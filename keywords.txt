@@ -1,0 +1,11 @@
+BatteryMeter		keyword1
+LEVEL			keyword1
+MODE			keyword2
+setMinMaxReadingValues	keyword2
+setSensingPin		keyword2
+setActivationPin	keyword2
+setLightPins		keyword2
+begin			keyword2
+runBatteryMeter		keyword2
+usingDebuggingMessages	keyword2
+readSensePin		keyword2
