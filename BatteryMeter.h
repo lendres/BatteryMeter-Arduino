@@ -1,6 +1,9 @@
 /*
   BatteryMeter
-  Library for checking a battery and displaying the results on LEDs.
+  Library for checking a battery and displaying the results on LEDs.  This
+  is the base class with two concrete classes that provide implementation
+  based on whether the output lights are directly on Arduino pins or accessed
+  through a shift register.
   
   Copyright (c) 2019 Lance A. Endres
 
@@ -19,16 +22,15 @@
 */
 
 /*
-  Example:
-  Lithium battery with a 
-   Readings    Voltage 
-  min max min max
-Level1  552 614.6 2.7 3
-Level2  614.6 677.2 3 3.3
-Level3  677.2 739.8 3.3 3.6
-Level4  739.8 802.4 3.6 3.9
-Level5  802.4 865 3.9 4.2
- */
+  Example lithium battery voltages and readings:
+            Readings     Voltage 
+           min    max   min   max 
+  Level1  552.0  614.6  2.7  3.0
+  Level2  614.6  677.2  3.0  3.3
+  Level3  677.2  739.8  3.3  3.6
+  Level4  739.8  802.4  3.6  3.9
+  Level5  802.4  865.0  3.9  4.2
+*/
 
 #ifndef BATTERYMETER_H
 #define BATTERYMETER_H
@@ -94,7 +96,7 @@ class BatteryMeter
     void setActivationPin(MODE mode, unsigned int activationPin, uint8_t activationLevel);
 
 	// Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
-	virtual void setLightPins(unsigned int ledPins[], LEVEL level, uint8_t ledOnLevel);
+    virtual void setLightPins(unsigned int ledPins[], LEVEL level, uint8_t ledOnLevel);
 	
     // Final initialization.
     void begin();
