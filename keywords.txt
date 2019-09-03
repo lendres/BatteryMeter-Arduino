@@ -1,6 +1,4 @@
 BatteryMeter		keyword1
-LEVEL			keyword1
-MODE			keyword2
 setMinMaxReadingValues	keyword2
 setSensingPin		keyword2
 setActivationPin	keyword2
@@ -9,3 +7,18 @@ begin			keyword2
 runBatteryMeter		keyword2
 usingDebuggingMessages	keyword2
 readSensePin		keyword2
+LEVEL			literal1
+LEVEL0			literal2
+LEVEL1			literal2
+LEVEL2			literal2
+LEVEL3			literal2
+LEVEL4			literal2
+LEVEL5			literal2
+LEVEL6			literal2
+LEVEL7			literal2
+LEVEL8			literal2
+LEVEL9			literal2
+MODE			literal1
+ALWAYSON		literal2
+LATCHING		literal2
+MOMENTARY		literal2
