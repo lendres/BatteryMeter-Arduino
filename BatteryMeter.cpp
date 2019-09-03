@@ -21,15 +21,17 @@
 #include "BatteryMeter.h"
 
 // Default contstructor.
-BatteryMeter::BatteryMeter() :
-  _batteryMin(650),
-  _batteryMax(950),
+BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax) :
+  _batteryMin(batteryMin),
+  _batteryMax(batteryMax),
   _ledPins(NULL),
   _printDebuggingMessages(false)
 {
 }
 
-BatteryMeter::BatteryMeter(bool printDebuggingMessages) :
+BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax, bool printDebuggingMessages) :
+  _batteryMin(batteryMin),
+  _batteryMax(batteryMax),
   _ledPins(NULL),
   _printDebuggingMessages(printDebuggingMessages)
 {
@@ -61,7 +63,7 @@ void BatteryMeter::setMinMaxReadingValues(unsigned int batteryMin, unsigned int 
 
 void BatteryMeter::setSensingPin(unsigned int sensingPin)
 {
-  _sensingPin         = A0;
+  _sensingPin         = sensingPin;
 
   // Set up our input pins.
   pinMode(_sensingPin, INPUT);

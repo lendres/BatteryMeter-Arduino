@@ -28,7 +28,6 @@ Level2  614.6 677.2 3 3.3
 Level3  677.2 739.8 3.3 3.6
 Level4  739.8 802.4 3.6 3.9
 Level5  802.4 865 3.9 4.2
-
  */
 
 #ifndef BATTERYMETER_H
@@ -76,10 +75,10 @@ class BatteryMeter
   // Constructors.
   public:
     // Default contstructor.
-    BatteryMeter();
+    BatteryMeter(unsigned int batteryMin, unsigned int batteryMax);
 
     // Constructor to use for debugging.
-    BatteryMeter(bool printDebuggingMessages);
+    BatteryMeter(unsigned int batteryMin, unsigned int batteryMax, bool printDebuggingMessages);
 
     // Default destructor.
     ~BatteryMeter();
@@ -87,12 +86,13 @@ class BatteryMeter
 
   // Setup functions.  Create your instance and run these functions in your "setup" routine.
   public:
+	// Ideally, you should use the constructor for these, but if you need to modify them on the fly you can use this.
     void setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax);
     void setSensingPin(unsigned int sensingPin);
     void setActivationPin(MODE mode, unsigned int activationPin, uint8_t activationLevel);
     void setLightPins(unsigned int ledPins[], LEVEL level, uint8_t ledOnLevel);
 
-    // Initialize all variables and pins.
+    // Final initialization.
     void begin();
 
 
@@ -155,4 +155,4 @@ class BatteryMeter
     bool            _printDebuggingMessages;
 };
 
-#endif BATTERYMETER_H
+#endif

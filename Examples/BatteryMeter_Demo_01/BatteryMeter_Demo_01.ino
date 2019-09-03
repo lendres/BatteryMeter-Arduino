@@ -1,10 +1,11 @@
 #include "BatteryMeter.h"
 
-const int lightPins[]     = {3, 4, 5, 6, 7};
-const int sensePin        = A0;
-const int activationPin   = 12;
+unsigned int lightPins[]     = {3, 4, 5, 6, 7};
+unsigned int sensePin        = A0;
+unsigned int activationPin   = 12;
 
-BatteryMeter meter(true);
+// Set the min and max reading values that correspond to 2.7 and 4.2 volts (for a lithium battery).
+BatteryMeter meter(552, 865, true);
 
 void setup()
 {
@@ -12,10 +13,7 @@ void setup()
   {
     Serial.begin(9600);
   }
-  
-  // Set the min and max reading values that correspond to 2.7 and 4.2 volts (for a lithium battery).
-  meter.setMinMaxReadingValues(552, 865);
-  
+
   // Set the input sensing pin.
   meter.setSensingPin(sensePin);
   
