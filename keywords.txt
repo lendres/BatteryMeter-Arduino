@@ -1,4 +1,11 @@
+################################
+# Class
+################################
 BatteryMeter		keyword1
+
+################################
+# Functions
+################################
 setMinMaxReadingValues	keyword2
 setSensingPin		keyword2
 setActivationPin	keyword2
@@ -8,6 +15,10 @@ begin			keyword2
 runBatteryMeter		keyword2
 usingDebuggingMessages	keyword2
 readSensePin		keyword2
+
+################################
+# Enums
+################################
 LEVEL			literal1
 LEVEL0			literal2
 LEVEL1			literal2
