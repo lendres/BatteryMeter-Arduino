@@ -88,14 +88,19 @@ class BatteryMeter
 
   // Setup functions.  Create your instance and run these functions in your "setup" routine.
   public:
-	// Ideally, you should use the constructor for this, but if you need to modify them on the fly you can use this.
+	  // Ideally, you should use the constructor for this, but if you need to modify them on the fly you can use this.
     void setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax);
 
-	// You need to set the sensing pin and activation pin.
+	  // You need to set the sensing pin and activation pin.
     void setSensingPin(unsigned int sensingPin);
-    void setActivationPin(MODE mode, unsigned int activationPin, uint8_t activationLevel);
 
-	// Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
+    // By setting the activation pin, you default to MOMENTARY mode.  Override with optional parameter or by using setMode.
+    void setActivationPin(unsigned int activationPin, uint8_t activationLevel, bool momentaryMode = true);
+
+    // Change the mode.  Initially, it is assumed ALWAYSON.  If you set the activation pin, you default to MOMENTARY.
+    void  setMode(MODE mode);
+
+	  // Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
     virtual void setLightPins(unsigned int ledPins[], LEVEL level, uint8_t ledOnLevel);
 	
     // Final initialization.

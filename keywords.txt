@@ -2,6 +2,7 @@ BatteryMeter		keyword1
 setMinMaxReadingValues	keyword2
 setSensingPin		keyword2
 setActivationPin	keyword2
+setMode			keyword2
 setLightPins		keyword2
 begin			keyword2
 runBatteryMeter		keyword2

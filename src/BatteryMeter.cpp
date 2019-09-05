@@ -25,7 +25,8 @@ BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax) :
   _ledPins(NULL),
   _printDebuggingMessages(false),
   _batteryMin(batteryMin),
-  _batteryMax(batteryMax)
+  _batteryMax(batteryMax),
+  _mode(ALWAYSON)
 {
 }
 
@@ -33,7 +34,8 @@ BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax, boo
   _ledPins(NULL),
   _printDebuggingMessages(printDebuggingMessages),
   _batteryMin(batteryMin),
-  _batteryMax(batteryMax)
+  _batteryMax(batteryMax),
+  _mode(ALWAYSON)
 {
 }
 
@@ -70,9 +72,12 @@ void BatteryMeter::setSensingPin(unsigned int sensingPin)
   digitalWrite(_sensingPin, LOW);
 }
 
-void BatteryMeter::setActivationPin(MODE mode, unsigned int activationPin, uint8_t activationLevel)
+void BatteryMeter::setActivationPin(unsigned int activationPin, uint8_t activationLevel, bool momentaryMode)
 {
-  _mode             = mode;
+  if (momentaryMode)
+  {
+    _mode = MOMENTARY;
+  }
   _activationPin    = activationPin;
   _activationLevel  = activationLevel;
 
@@ -88,6 +93,11 @@ void BatteryMeter::setActivationPin(MODE mode, unsigned int activationPin, uint8
   {
     digitalWrite(_activationPin, LOW);
   }
+}
+
+void BatteryMeter::setMode(MODE mode)
+{
+  _mode             = mode;
 }
 
 void BatteryMeter::setLightPins(unsigned int ledPins[], LEVEL maxLevel, uint8_t ledOnLevel)
