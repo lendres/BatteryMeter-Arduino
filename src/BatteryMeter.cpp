@@ -26,8 +26,10 @@ BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax) :
   _printDebuggingMessages(false),
   _batteryMin(batteryMin),
   _batteryMax(batteryMax),
-  _mode(ALWAYSON)
+  _mode(ALWAYSON),
+  _on(false)
 {
+  _updateTimer.setTimeOutTime(60000);
 }
 
 BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax, bool printDebuggingMessages) :
@@ -35,24 +37,16 @@ BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax, boo
   _printDebuggingMessages(printDebuggingMessages),
   _batteryMin(batteryMin),
   _batteryMax(batteryMax),
-  _mode(ALWAYSON)
+  _mode(ALWAYSON),
+  _on(false)
 {
+  _updateTimer.setTimeOutTime(60000);
 }
 
 BatteryMeter::~BatteryMeter()
 {
-  if (_printDebuggingMessages)
+  if (_ledPins)
   {
-    Serial.println("BatteryMeter destructor.");
-  }
-
-  if (!_ledPins)
-  {
-	  if (_printDebuggingMessages)
-	  {
-		  Serial.println("Deleting LED pin array.");
-	  }
-
 	  delete[] _ledPins;
   }
 }
@@ -67,17 +61,15 @@ void BatteryMeter::setSensingPin(unsigned int sensingPin)
 {
   _sensingPin         = sensingPin;
 
-  // Set up our input pins.
+  // Set up our input pin.
   pinMode(_sensingPin, INPUT);
   digitalWrite(_sensingPin, LOW);
 }
 
-void BatteryMeter::setActivationPin(unsigned int activationPin, uint8_t activationLevel, bool momentaryMode)
+void BatteryMeter::setActivationPin(unsigned int activationPin, uint8_t activationLevel)
 {
-  if (momentaryMode)
-  {
-    _mode = MOMENTARY;
-  }
+  _mode = MOMENTARY;
+
   _activationPin    = activationPin;
   _activationLevel  = activationLevel;
 
@@ -93,11 +85,6 @@ void BatteryMeter::setActivationPin(unsigned int activationPin, uint8_t activati
   {
     digitalWrite(_activationPin, LOW);
   }
-}
-
-void BatteryMeter::setMode(MODE mode)
-{
-  _mode             = mode;
 }
 
 void BatteryMeter::setLightPins(unsigned int ledPins[], LEVEL maxLevel, uint8_t ledOnLevel)
@@ -149,28 +136,49 @@ void BatteryMeter::begin()
   }
 }
 
-void BatteryMeter::runBatteryMeter()
+void BatteryMeter::update()
 {
   switch (_mode)
   {
     case ALWAYSON:
-      meter();
+      // The meter will only run if the timer is up.
+      meter(false);
       break;
-
-//    case LATCHING:
-//      break;
 
     case MOMENTARY:
       if (digitalRead(_activationPin) == _activationLevel)
       {
-        meter();
+        // If it was off, we turn it on.  This has the effect of only updating
+        // the meter (lights) once per button press.  This prevents the light
+        // from flickering if the voltage is very close the a level boundary.
+        if (!_on)
+        {
+          _on = true;
+          meter(true);
+        }
       }
       else
       {
-        setLights(LEVEL0);
+        // If on, turn off, otherwise we don't need to do anything.
+        if (_on)
+        {
+          // We are not on (button is not pressed).
+          _on = false;
+          setLights(LEVEL0);
+        }
       }
       break;
   }
+}
+
+void BatteryMeter::setMode(MODE mode)
+{
+  _mode             = mode;
+}
+
+void BatteryMeter::setUpdateInterval(uint32_t updateInterval)
+{
+  _updateTimer.setTimeOutTime(updateInterval);
 }
 
 bool BatteryMeter::usingDebuggingMessages()
@@ -183,23 +191,30 @@ float BatteryMeter::readSensePin()
   return analogRead(_sensingPin);
 }
 
-void BatteryMeter::meter()
+void BatteryMeter::meter(bool forcedRun)
 {
-  float sensePinReading         = analogRead(_sensingPin);
-  LEVEL level                   = getBatteryLevel(sensePinReading);
-
-  // We we are dubugging, print the level.  LEVEL is zero based so we add one
-  // to get the human version.
-  if (_printDebuggingMessages)
+  // If the timer is up we run.  If we have specified "forcedRun" it means run regardless
+  // of whether the timer is up or not.
+  if (_updateTimer.hasTimedOut() || forcedRun)
   {
-    Serial.print("Sensing pin reading: ");
-    Serial.println(sensePinReading);
-    Serial.print("Battery level: ");
-    Serial.println(level);
-    Serial.println("");
-  }
+    float sensePinReading    = analogRead(_sensingPin);
+    LEVEL level              = getBatteryLevel(sensePinReading);
 
-  setLights(level);
+    // Set the lights.
+    setLights(level);
+
+    // Restart the timer.
+    _updateTimer.reset();
+    
+    // We we are dubugging, print the level.  LEVEL is zero based so we add one
+    // to get the human version.
+    if (_printDebuggingMessages)
+    {
+      Serial.print("Battery level: ");
+      Serial.println(level);
+      Serial.println("");
+    }
+  }
 }
 
 BatteryMeter::LEVEL BatteryMeter::getBatteryLevel(float sensePinReading)
@@ -219,6 +234,6 @@ BatteryMeter::LEVEL BatteryMeter::getBatteryLevel(float sensePinReading)
     }
   }
 
-  // Something probably went wrong.
+  // Over the max level.
   return _maxLevel;
 }

@@ -32,10 +32,20 @@
   Level5  802.4  865.0  3.9  4.2
 */
 
+/*
+  You must have the following libraries to run this software.
+
+  SoftTimers by Antoine Beauchamp
+    - Be careful to get the right library, there are several timer libraries and even more than one "SoftTimer" library.
+    - Can be installed from Arduino IDE Library Manager.
+    - https://github.com/end2endzone/SoftTimers
+*/
+
 #ifndef BATTERYMETER_H
 #define BATTERYMETER_H
 
 #include <Arduino.h>
+#include <SoftTimers.h>
 
 class BatteryMeter
 {
@@ -55,7 +65,8 @@ class BatteryMeter
       LEVEL6,
       LEVEL7,
       LEVEL8,
-      LEVEL9
+      LEVEL9,
+      LEVEL10
     };
 
     // The mode for the display.
@@ -94,11 +105,10 @@ class BatteryMeter
 	  // You need to set the sensing pin and activation pin.
     void setSensingPin(unsigned int sensingPin);
 
-    // By setting the activation pin, you default to MOMENTARY mode.  Override with optional parameter or by using setMode.
-    void setActivationPin(unsigned int activationPin, uint8_t activationLevel, bool momentaryMode = true);
-
-    // Change the mode.  Initially, it is assumed ALWAYSON.  If you set the activation pin, you default to MOMENTARY.
-    void  setMode(MODE mode);
+    // If the battery meter is activated (lights on) by a button ,use this.  If you are using an
+    // always on meter, you do not need to set this.
+    // By setting the activation pin, you default to MOMENTARY mode.  Override by using setMode.
+    void setActivationPin(unsigned int activationPin, uint8_t activationLevel);
 
 	  // Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
     virtual void setLightPins(unsigned int ledPins[], LEVEL level, uint8_t ledOnLevel);
@@ -106,11 +116,19 @@ class BatteryMeter
     // Final initialization.
     void begin();
 
+  // Optional settings.
+  public:
+    // Change the mode.  Initially, it is assumed ALWAYSON.  If you set the activation pin, you default to MOMENTARY.  Use
+    // this to customize the bahavior.
+    void  setMode(MODE mode);
+
+    // The time between battery readings and updating lights.
+    void setUpdateInterval(uint32_t updateInterval);
 
   // Loop functions.  Run these functions in your "loop" routine.
   public:
-    // Entry point to the battery meter.
-    void runBatteryMeter();
+    // Entry point to the battery meter.  Checks for any state changes and updates accordingly.
+    void update();
 
 
   // Debugging functions.
@@ -125,7 +143,7 @@ class BatteryMeter
   // Private functions.  The user need not worry about these.
   private:
     // The main work of finding the level and setting the lights.
-    void meter();
+    void meter(bool forcedRun);
     
     // Converts the sensing pin reading into a battery level.
     LEVEL getBatteryLevel(float sensePinReading);
@@ -137,17 +155,17 @@ class BatteryMeter
   // Members / variables.
   // The underscorde denotes a variable that belongs to the class (not a local variable).
   protected:
-	// LED output pins.
-	unsigned int*    _ledPins;
+    // LED output pins.
+    unsigned int*    _ledPins;
 
-	// The level (HIGH or LOW) to use to turn the LEDs on.
+    // The level (HIGH or LOW) to use to turn the LEDs on.
     uint8_t         _ledOnLevel;
 
-	// Number of levels which is the number of output segments or LEDs.
-	LEVEL           _maxLevel;
+    // Number of levels which is the number of output segments or LEDs.
+    LEVEL             _maxLevel;
 
-	// Used to add debugging messages.
-	bool            _printDebuggingMessages;
+    // Used to add debugging messages.
+    bool              _printDebuggingMessages;
 
 
   private:
@@ -169,6 +187,10 @@ class BatteryMeter
 
     // The numerical value that each level has.  I.e., (batteryMax-batteryMin)/numberOfLevls.
     float           _levelWidth;
+
+    // Used to remember the state.
+    bool            _on;
+    SoftTimer       _updateTimer;
 };
 
 #endif

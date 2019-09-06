@@ -1,7 +1,7 @@
 ################################
 # Class
 ################################
-BatteryMeter		keyword1
+BatteryMeter		KEYWORD1
 
 ################################
 # Functions
@@ -9,12 +9,17 @@ BatteryMeter		keyword1
 setMinMaxReadingValues	keyword2
 setSensingPin		keyword2
 setActivationPin	keyword2
-setMode			keyword2
 setLightPins		keyword2
 begin			keyword2
-runBatteryMeter		keyword2
+setMode			keyword2
+setUpdateInterval	keyword2
+update			keyword2
 usingDebuggingMessages	keyword2
 readSensePin		keyword2
+initialize		keyword2
+meter			keyword2
+getBatteryLevel		keyword2
+setLights		keyword2
 
 ################################
 # Enums
@@ -30,6 +35,7 @@ LEVEL6			literal2
 LEVEL7			literal2
 LEVEL8			literal2
 LEVEL9			literal2
+LEVEL10			literal2
 MODE			literal1
 ALWAYSON		literal2
 LATCHING		literal2
