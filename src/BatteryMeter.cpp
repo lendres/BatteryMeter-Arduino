@@ -108,6 +108,12 @@ void BatteryMeter::begin()
     // We we are dubugging, print info.
   if (_printDebuggingMessages)
   {
+    Serial.println("");
+    Serial.println("*** Battery Meter ***");
+
+    Serial.print("Mode: ");
+    Serial.println(_mode);
+    
     Serial.print("Battery level reading at low: ");
     Serial.println(_batteryMin);
 
@@ -132,7 +138,16 @@ void BatteryMeter::begin()
       Serial.print(" ");
       Serial.print(_ledPins[i]);
     }
+
+    // Print end of line since we don't return after printing the pins above.
     Serial.println("");
+  }
+
+  // If in always on mode, we need to run the meter once so it starts immediately without
+  // waiting for the timer to complete.
+  if (_mode == ALWAYSON)
+  {
+    meter(true);
   }
 }
 
@@ -191,6 +206,26 @@ float BatteryMeter::readSensePin()
   return analogRead(_sensingPin);
 }
 
+void BatteryMeter::printPinState(int pin, bool on)
+{
+  if (_printDebuggingMessages)
+  {
+    Serial.print("Level: ");
+    Serial.print(pin+1);
+    Serial.print("    Pin: ");
+    Serial.print(_ledPins[pin]);
+    Serial.print("    ");
+    if (on)
+    {
+      Serial.println("On");
+    }
+    else
+    {
+      Serial.println("Off");
+    }
+  }
+}
+
 void BatteryMeter::meter(bool forcedRun)
 {
   // If the timer is up we run.  If we have specified "forcedRun" it means run regardless
@@ -210,9 +245,13 @@ void BatteryMeter::meter(bool forcedRun)
     // to get the human version.
     if (_printDebuggingMessages)
     {
+      Serial.println("");
+      Serial.println("*** Battery Meter ***");
+      Serial.print("Reading: ");
+      Serial.println(sensePinReading);
+
       Serial.print("Battery level: ");
       Serial.println(level);
-      Serial.println("");
     }
   }
 }

@@ -140,6 +140,13 @@ class BatteryMeter
     float readSensePin();
 
 
+  // Protected debugging functions.  Used by the derived classes.  The user need not worry
+  // about these.
+  protected:
+    // Print the state of a pin.
+    void printPinState(int pin,  bool on);
+
+
   // Private functions.  The user need not worry about these.
   private:
     // The main work of finding the level and setting the lights.
@@ -162,10 +169,10 @@ class BatteryMeter
     uint8_t         _ledOnLevel;
 
     // Number of levels which is the number of output segments or LEDs.
-    LEVEL             _maxLevel;
+    LEVEL            _maxLevel;
 
     // Used to add debugging messages.
-    bool              _printDebuggingMessages;
+    bool             _printDebuggingMessages;
 
 
   private:
