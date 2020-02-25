@@ -188,7 +188,7 @@ void BatteryMeter::update()
 
 void BatteryMeter::setMode(MODE mode)
 {
-  _mode             = mode;
+  _mode = mode;
 }
 
 void BatteryMeter::setUpdateInterval(uint32_t updateInterval)

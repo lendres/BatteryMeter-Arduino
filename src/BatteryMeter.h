@@ -120,7 +120,7 @@ class BatteryMeter
   public:
     // Change the mode.  Initially, it is assumed ALWAYSON.  If you set the activation pin, you default to MOMENTARY.  Use
     // this to customize the bahavior.
-    void  setMode(MODE mode);
+    void setMode(MODE mode);
 
     // The time between battery readings and updating lights.
     void setUpdateInterval(uint32_t updateInterval);
