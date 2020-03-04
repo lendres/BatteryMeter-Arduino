@@ -59,7 +59,7 @@ void BatteryMeter::setMinMaxReadingValues(unsigned int batteryMin, unsigned int 
 
 void BatteryMeter::setSensingPin(unsigned int sensingPin)
 {
-  _sensingPin         = sensingPin;
+  _sensingPin     = sensingPin;
 
   // Set up our input pin.
   pinMode(_sensingPin, INPUT);
@@ -108,31 +108,29 @@ void BatteryMeter::begin()
     // We we are dubugging, print info.
   if (_printDebuggingMessages)
   {
-    Serial.println("");
-    Serial.println("*** Battery Meter ***");
 
-    Serial.print("Mode: ");
+    Serial.print("[BatteryMeter] Mode: ");
     Serial.println(_mode);
     
-    Serial.print("Battery level reading at low: ");
+    Serial.print("[BatteryMeter] Battery level reading at low: ");
     Serial.println(_batteryMin);
 
-    Serial.print("Battery level reading at high: ");
+    Serial.print("[BatteryMeter] Battery level reading at high: ");
     Serial.println(_batteryMax);
 
-    Serial.print("Number of battery levels: ");
+    Serial.print("[BatteryMeter] Number of battery levels: ");
     Serial.println(_maxLevel);
 
-    Serial.print("Level  width: ");
+    Serial.print("[BatteryMeter] Level  width: ");
     Serial.println(_levelWidth);
     
-    Serial.print("Sensing pin: ");
+    Serial.print("[BatteryMeter] Sensing pin: ");
     Serial.println(_sensingPin);
     
-    Serial.print("Activation pin: ");
+    Serial.print("[BatteryMeter] Activation pin: ");
     Serial.println(_activationPin);
     
-    Serial.print("Light pins:");
+    Serial.print("[BatteryMeter] Light pins:");
     for (int i = 0; i < _maxLevel; i++)
     {
       Serial.print(" ");
@@ -210,7 +208,7 @@ void BatteryMeter::printPinState(int pin, bool on)
 {
   if (_printDebuggingMessages)
   {
-    Serial.print("Level: ");
+    Serial.print("[BatteryMeter] Level: ");
     Serial.print(pin+1);
     Serial.print("    Pin: ");
     Serial.print(_ledPins[pin]);
@@ -245,12 +243,10 @@ void BatteryMeter::meter(bool forcedRun)
     // to get the human version.
     if (_printDebuggingMessages)
     {
-      Serial.println("");
-      Serial.println("*** Battery Meter ***");
-      Serial.print("Reading: ");
+      Serial.print("[BatteryMeter] Reading: ");
       Serial.println(sensePinReading);
 
-      Serial.print("Battery level: ");
+      Serial.print("[BatteryMeter] Battery level: ");
       Serial.println(level);
     }
   }
