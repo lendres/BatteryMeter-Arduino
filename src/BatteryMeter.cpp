@@ -23,18 +23,6 @@
 // Default contstructor.
 BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax) :
   _ledPins(NULL),
-  _printDebuggingMessages(false),
-  _batteryMin(batteryMin),
-  _batteryMax(batteryMax),
-  _mode(ALWAYSON),
-  _on(false)
-{
-  _updateTimer.setTimeOutTime(60000);
-}
-
-BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax, bool printDebuggingMessages) :
-  _ledPins(NULL),
-  _printDebuggingMessages(printDebuggingMessages),
   _batteryMin(batteryMin),
   _batteryMax(batteryMax),
   _mode(ALWAYSON),
@@ -105,10 +93,15 @@ void BatteryMeter::begin()
   // The width of each level is in the units read from the sensing pin.
   _levelWidth = ((float)_batteryMax - _batteryMin) / (_maxLevel);
 
-    // We we are dubugging, print info.
-  if (_printDebuggingMessages)
+  // If in always on mode, we need to run the meter once so it starts immediately without
+  // waiting for the timer to complete.
+  if (_mode == ALWAYSON)
   {
-
+    meter(true);
+  }
+  
+  // We are dubugging, print info.
+  #ifdef BATTERYMETERDEBUG
     Serial.print("[BatteryMeter] Mode: ");
     Serial.println(_mode);
     
@@ -139,14 +132,7 @@ void BatteryMeter::begin()
 
     // Print end of line since we don't return after printing the pins above.
     Serial.println("");
-  }
-
-  // If in always on mode, we need to run the meter once so it starts immediately without
-  // waiting for the timer to complete.
-  if (_mode == ALWAYSON)
-  {
-    meter(true);
-  }
+  #endif
 }
 
 void BatteryMeter::update()
@@ -194,35 +180,29 @@ void BatteryMeter::setUpdateInterval(uint32_t updateInterval)
   _updateTimer.setTimeOutTime(updateInterval);
 }
 
-bool BatteryMeter::usingDebuggingMessages()
-{
-  return _printDebuggingMessages;
-}
-
 float BatteryMeter::readSensePin()
 {
   return analogRead(_sensingPin);
 }
 
+#ifdef BATTERYMETERDEBUG
 void BatteryMeter::printPinState(int pin, bool on)
 {
-  if (_printDebuggingMessages)
+  Serial.print("[BatteryMeter] Level: ");
+  Serial.print(pin+1);
+  Serial.print("    Pin: ");
+  Serial.print(_ledPins[pin]);
+  Serial.print("    ");
+  if (on)
   {
-    Serial.print("[BatteryMeter] Level: ");
-    Serial.print(pin+1);
-    Serial.print("    Pin: ");
-    Serial.print(_ledPins[pin]);
-    Serial.print("    ");
-    if (on)
-    {
-      Serial.println("On");
-    }
-    else
-    {
-      Serial.println("Off");
-    }
+    Serial.println("On");
+  }
+  else
+  {
+    Serial.println("Off");
   }
 }
+#endif
 
 void BatteryMeter::meter(bool forcedRun)
 {
@@ -241,14 +221,13 @@ void BatteryMeter::meter(bool forcedRun)
     
     // We we are dubugging, print the level.  LEVEL is zero based so we add one
     // to get the human version.
-    if (_printDebuggingMessages)
-    {
+    #ifdef BATTERYMETERDEBUG
       Serial.print("[BatteryMeter] Reading: ");
       Serial.println(sensePinReading);
 
       Serial.print("[BatteryMeter] Battery level: ");
       Serial.println(level);
-    }
+    #endif
   }
 }
 

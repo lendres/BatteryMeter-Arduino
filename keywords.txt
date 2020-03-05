@@ -1,42 +1,47 @@
 ################################
 # Class
 ################################
-BatteryMeter		KEYWORD1
+BatteryMeter	KEYWORD1
+BatteryMeterPins	KEYWORD1
+BatteryMeterShiftRegister	KEYWORD1
 
 ################################
 # Functions
 ################################
 setMinMaxReadingValues	keyword2
-setSensingPin		keyword2
+setSensingPin	keyword2
 setActivationPin	keyword2
-setLightPins		keyword2
-begin			keyword2
-setMode			keyword2
+setLightPins	keyword2
+begin	keyword2
+setMode	keyword2
 setUpdateInterval	keyword2
-update			keyword2
+update	keyword2
 usingDebuggingMessages	keyword2
-readSensePin		keyword2
-initialize		keyword2
-meter			keyword2
-getBatteryLevel		keyword2
-setLights		keyword2
+readSensePin	keyword2
+initialize	keyword2
+meter	keyword2
+getBatteryLevel	keyword2
+setLights	keyword2
+
+printPinState	keyword2
 
 ################################
 # Enums
 ################################
-LEVEL			literal1
-LEVEL0			literal2
-LEVEL1			literal2
-LEVEL2			literal2
-LEVEL3			literal2
-LEVEL4			literal2
-LEVEL5			literal2
-LEVEL6			literal2
-LEVEL7			literal2
-LEVEL8			literal2
-LEVEL9			literal2
-LEVEL10			literal2
-MODE			literal1
-ALWAYSON		literal2
-LATCHING		literal2
-MOMENTARY		literal2
+LEVEL	literal1
+LEVEL0	literal2
+LEVEL1	literal2
+LEVEL2	literal2
+LEVEL3	literal2
+LEVEL4	literal2
+LEVEL5	literal2
+LEVEL6	literal2
+LEVEL7	literal2
+LEVEL8	literal2
+LEVEL9	literal2
+LEVEL10	literal2
+
+MODE	literal1
+ALWAYSON	literal2
+LATCHING	literal2
+MOMENTARY	literal2

@@ -41,11 +41,18 @@
     - https://github.com/end2endzone/SoftTimers
 */
 
+/*
+  If you want debugging messages printed to the serial monitor, enable the serial monitor and
+  use the following line in your file:
+  
+  #define BATTERYMETERDEBUG
+*/
+
 #ifndef BATTERYMETER_H
 #define BATTERYMETER_H
 
 #include <Arduino.h>
-#include <SoftTimers.h>
+#include "SoftTimers.h"
 
 class BatteryMeter
 {
@@ -90,9 +97,6 @@ class BatteryMeter
     // Default contstructor.
     BatteryMeter(unsigned int batteryMin, unsigned int batteryMax);
 
-    // Constructor to use for debugging.
-    BatteryMeter(unsigned int batteryMin, unsigned int batteryMax, bool printDebuggingMessages);
-
     // Default destructor.
     ~BatteryMeter();
 
@@ -116,6 +120,7 @@ class BatteryMeter
     // Final initialization.
     void begin();
 
+
   // Optional settings.
   public:
     // Change the mode.  Initially, it is assumed ALWAYSON.  If you set the activation pin, you default to MOMENTARY.  Use
@@ -125,6 +130,7 @@ class BatteryMeter
     // The time between battery readings and updating lights.
     void setUpdateInterval(uint32_t updateInterval);
 
+
   // Loop functions.  Run these functions in your "loop" routine.
   public:
     // Entry point to the battery meter.  Checks for any state changes and updates accordingly.
@@ -133,18 +139,18 @@ class BatteryMeter
 
   // Debugging functions.
   public:
-    // Returns true if debugging messages are printed.
-    bool usingDebuggingMessages();
-
     // Gets the reading from the sensing pin.
     float readSensePin();
 
 
-  // Protected debugging functions.  Used by the derived classes.  The user need not worry
-  // about these.
+  // Protected debugging functions.  Used by the derived classes.
   protected:
+    #ifdef BATTERYMETERDEBUG
+    
     // Print the state of a pin.
     void printPinState(int pin,  bool on);
+    
+    #endif
 
 
   // Private functions.  The user need not worry about these.
@@ -170,9 +176,6 @@ class BatteryMeter
 
     // Number of levels which is the number of output segments or LEDs.
     LEVEL            _maxLevel;
-
-    // Used to add debugging messages.
-    bool             _printDebuggingMessages;
 
 
   private:
