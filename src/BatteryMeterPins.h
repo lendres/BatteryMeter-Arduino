@@ -39,7 +39,7 @@ class BatteryMeterPins : public BatteryMeterBase
 {
   // Constructors.
   public:
-    // Default contstructor.
+    // Constructor.
     BatteryMeterPins(unsigned int batteryMin, unsigned int batteryMax);
 
     // Default destructor.
