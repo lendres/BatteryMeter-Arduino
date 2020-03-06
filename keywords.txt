@@ -2,6 +2,7 @@
 # Class
 ################################
 BatteryMeter	KEYWORD1
+BatteryMeterBase	KEYWORD1
 BatteryMeterPins	KEYWORD1
 BatteryMeterShiftRegister	KEYWORD1
 
