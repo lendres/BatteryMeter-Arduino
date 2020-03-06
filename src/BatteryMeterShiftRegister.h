@@ -35,7 +35,7 @@
 #define BATTERYMETERSHIFTREGISTER_H
 
 #include <Arduino.h>
-#include "BatteryMeter.h"
+#include "BatteryMeterBase.h"
 #include "ShiftRegister74HC595.h"
 
 template<uint8_t numberOfShiftRegisters>
