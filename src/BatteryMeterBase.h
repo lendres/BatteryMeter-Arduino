@@ -54,7 +54,7 @@
 #include <Arduino.h>
 #include "SoftTimers.h"
 
-class BatteryMeter
+namespace BatteryMeter
 {
   // Enums.
   public:
@@ -90,8 +90,10 @@ class BatteryMeter
       // activate pin is released.
       MOMENTARY
     };
+}
 
-
+class BatteryMeterBase
+{
   // Constructors.
   public:
     // Default constructor.
