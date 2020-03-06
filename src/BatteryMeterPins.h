@@ -35,7 +35,7 @@
 #include <Arduino.h>
 #include "BatteryMeter.h"
 
-class BatteryMeterPins : public BatteryMeter
+class BatteryMeterPins : public BatteryMeterBase
 {
   // Constructors.
   public:
