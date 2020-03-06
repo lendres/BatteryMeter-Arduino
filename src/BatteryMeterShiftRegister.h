@@ -39,7 +39,7 @@
 #include "ShiftRegister74HC595.h"
 
 template<uint8_t numberOfShiftRegisters>
-class BatteryMeterShiftRegister : public BatteryMeter
+class BatteryMeterShiftRegister : public BatteryMeterBase
 {
   // Constructors.
   public:
