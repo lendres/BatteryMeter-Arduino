@@ -54,49 +54,11 @@
 #include <Arduino.h>
 #include "SoftTimers.h"
 
-namespace BatteryMeter
-{
-  // Enums.
-  public:
-    // The meter levels.  This is the number of lights you want to display.
-    // Example: For a 3 segment display or 3 LEDs you would use LEVEL3.
-    // LEVEL0 is reserved for all lights off.
-    enum LEVEL
-    {
-      LEVEL0,
-      LEVEL1,
-      LEVEL2,
-      LEVEL3,
-      LEVEL4,
-      LEVEL5,
-      LEVEL6,
-      LEVEL7,
-      LEVEL8,
-      LEVEL9,
-      LEVEL10
-    };
-
-    // The mode for the display.
-    enum MODE
-    {
-      // The display (LEDs) are always on.
-      ALWAYSON,
-
-      // The display state (on or off) is toggled by the activate pin.  Press once to turn
-      // on, press again to turn off.
-//      LATCHING,
-
-      // The display turns on when the activate pin is pressed and turns off when the
-      // activate pin is released.
-      MOMENTARY
-    };
-}
-
 class BatteryMeterBase
 {
   // Constructors.
   public:
-    // Default constructor.
+    // Constructor.
     BatteryMeterBase(unsigned int batteryMin, unsigned int batteryMax);
 
     // Default destructor.
@@ -105,10 +67,10 @@ class BatteryMeterBase
 
   // Setup functions.  Create your instance and run these functions in your "setup" routine.
   public:
-	  // Ideally, you should use the constructor for this, but if you need to modify them on the fly you can use this.
+    // Ideally, you should use the constructor for this, but if you need to modify them on the fly you can use this.
     void setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax);
 
-	  // You need to set the sensing pin and activation pin.
+    // You need to set the sensing pin and activation pin.
     void setSensingPin(unsigned int sensingPin);
 
     // If the battery meter is activated (lights on) by a button ,use this.  If you are using an
@@ -116,7 +78,7 @@ class BatteryMeterBase
     // By setting the activation pin, you default to MOMENTARY mode.  Override by using setMode.
     void setActivationPin(unsigned int activationPin, uint8_t activationLevel);
 
-	  // Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
+    // Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
     virtual void setLightPins(unsigned int ledPins[], LEVEL level, uint8_t ledOnLevel);
 	
     // Final initialization.
