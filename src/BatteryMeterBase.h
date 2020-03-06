@@ -48,8 +48,8 @@
   #define BATTERYMETERDEBUG
 */
 
-#ifndef BATTERYMETER_H
-#define BATTERYMETER_H
+#ifndef BATTERYMETERBASE_H
+#define BATTERYMETERBASE_H
 
 #include <Arduino.h>
 #include "SoftTimers.h"
@@ -95,10 +95,10 @@ class BatteryMeter
   // Constructors.
   public:
     // Default constructor.
-    BatteryMeter(unsigned int batteryMin, unsigned int batteryMax);
+    BatteryMeterBase(unsigned int batteryMin, unsigned int batteryMax);
 
     // Default destructor.
-    ~BatteryMeter();
+    ~BatteryMeterBase();
 
 
   // Setup functions.  Create your instance and run these functions in your "setup" routine.
