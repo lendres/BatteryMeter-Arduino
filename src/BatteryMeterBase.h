@@ -88,7 +88,7 @@ class BatteryMeterBase
   // Optional settings.
   public:
     // Change the mode.  Initially, it is assumed ALWAYSON.  If you set the activation pin, you default to MOMENTARY.  Use
-    // this to customize the bahavior.
+    // this to customize the behavior.
     void setMode(MODE mode);
 
     // The time between battery readings and updating lights.
@@ -130,7 +130,7 @@ class BatteryMeterBase
 
 
   // Members / variables.
-  // The underscorde denotes a variable that belongs to the class (not a local variable).
+  // The underscore denotes a variable that belongs to the class (not a local variable).
   protected:
     // LED output pins.
     unsigned int*    _ledPins;
@@ -143,10 +143,10 @@ class BatteryMeterBase
 
 
   private:
-    // The reading that is considered fully dischanged.  This is 2.7 volts for a lithium battery.
+    // The reading that is considered fully discharged.  This is 2.7 volts for a lithium battery.
     unsigned int    _batteryMin;
 
-    // The reading that is considered fully changed.  This is 4.2 volts for a lithium battery.
+    // The reading that is considered fully charged.  This is 4.2 volts for a lithium battery.
     unsigned int    _batteryMax;
 
     // Analog sensing pin.  The battery level is read from this pin.
