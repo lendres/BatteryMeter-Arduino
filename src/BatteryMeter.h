@@ -94,7 +94,7 @@ class BatteryMeter
 
   // Constructors.
   public:
-    // Default contstructor.
+    // Default constructor.
     BatteryMeter(unsigned int batteryMin, unsigned int batteryMax);
 
     // Default destructor.
