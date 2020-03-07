@@ -35,15 +35,15 @@
 #define BATTERYMETERSHIFTREGISTER_H
 
 #include <Arduino.h>
-#include "BatteryMeter.h"
+#include "BatteryMeterBase.h"
 #include "ShiftRegister74HC595.h"
 
 template<uint8_t numberOfShiftRegisters>
-class BatteryMeterShiftRegister : public BatteryMeter
+class BatteryMeterShiftRegister : public BatteryMeterBase
 {
   // Constructors.
   public:
-    // Default contstructor.
+    // Constructor.
     BatteryMeterShiftRegister(ShiftRegister74HC595<numberOfShiftRegisters>* shiftRegister, unsigned int batteryMin, unsigned int batteryMax);
 
     // Default destructor.
@@ -57,14 +57,14 @@ class BatteryMeterShiftRegister : public BatteryMeter
 
 
   // Members / variables.
-  // The underscorde denotes a variable that belongs to the class (not a local variable).
+  // The underscore denotes a variable that belongs to the class (not a local variable).
   private:
 	  ShiftRegister74HC595<numberOfShiftRegisters>*   _shiftRegister;
 
 };
 
 // Definitions are stored in another file, so we have to include it here.  This allows us to separate the interface
-// and defintions while using a template.  Normally, all the code has to go into the header file for a template.
+// and definitions while using a template.  Normally, all the code has to go into the header file for a template.
 #include "BatteryMeterShiftRegister.hpp"
 
 #endif

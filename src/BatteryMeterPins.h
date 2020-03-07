@@ -35,11 +35,11 @@
 #include <Arduino.h>
 #include "BatteryMeter.h"
 
-class BatteryMeterPins : public BatteryMeter
+class BatteryMeterPins : public BatteryMeterBase
 {
   // Constructors.
   public:
-    // Default contstructor.
+    // Constructor.
     BatteryMeterPins(unsigned int batteryMin, unsigned int batteryMax);
 
     // Default destructor.

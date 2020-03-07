@@ -23,9 +23,8 @@
 
 #include "BatteryMeterPins.h"
 
-// Default contstructor.
 BatteryMeterPins::BatteryMeterPins(unsigned int batteryMin, unsigned int batteryMax) :
-  BatteryMeter(batteryMin, batteryMax)
+  BatteryMeterBase(batteryMin, batteryMax)
 {
 }
 

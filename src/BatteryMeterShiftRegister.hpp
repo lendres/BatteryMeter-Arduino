@@ -19,7 +19,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Default contstructor.
 template<uint8_t numberOfShiftRegisters>
 BatteryMeterShiftRegister<numberOfShiftRegisters>::BatteryMeterShiftRegister(ShiftRegister74HC595<numberOfShiftRegisters>* shiftRegister, unsigned int batteryMin, unsigned int batteryMax) :
   BatteryMeter(batteryMin, batteryMax),
@@ -35,7 +34,7 @@ BatteryMeterShiftRegister<numberOfShiftRegisters>::~BatteryMeterShiftRegister()
 template<uint8_t numberOfShiftRegisters>
 void BatteryMeterShiftRegister<numberOfShiftRegisters>::setLights(LEVEL level)
 {
-  // Turn on the lights up to the current level.  We use the "no update" verision
+  // Turn on the lights up to the current level.  We use the "no update" version
   // of set so we can set the values for all the lights and then activate once.
   for (int i = 0; i < level; i++)
   {

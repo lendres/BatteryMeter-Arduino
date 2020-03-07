@@ -48,65 +48,29 @@
   #define BATTERYMETERDEBUG
 */
 
-#ifndef BATTERYMETER_H
-#define BATTERYMETER_H
+#ifndef BATTERYMETERBASE_H
+#define BATTERYMETERBASE_H
 
 #include <Arduino.h>
 #include "SoftTimers.h"
 
-class BatteryMeter
+class BatteryMeterBase
 {
-  // Enums.
-  public:
-    // The meter levels.  This is the number of lights you want to display.
-    // Example: For a 3 segment display or 3 LEDs you would use LEVEL3.
-    // LEVEL0 is reserved for all lights off.
-    enum LEVEL
-    {
-      LEVEL0,
-      LEVEL1,
-      LEVEL2,
-      LEVEL3,
-      LEVEL4,
-      LEVEL5,
-      LEVEL6,
-      LEVEL7,
-      LEVEL8,
-      LEVEL9,
-      LEVEL10
-    };
-
-    // The mode for the display.
-    enum MODE
-    {
-      // The display (LEDs) are always on.
-      ALWAYSON,
-
-      // The display state (on or off) is toggled by the activate pin.  Press once to turn
-      // on, press again to turn off.
-//      LATCHING,
-
-      // The display turns on when the activate pin is pressed and turns off when the
-      // activate pin is released.
-      MOMENTARY
-    };
-
-
   // Constructors.
   public:
-    // Default contstructor.
-    BatteryMeter(unsigned int batteryMin, unsigned int batteryMax);
+    // Constructor.
+    BatteryMeterBase(unsigned int batteryMin, unsigned int batteryMax);
 
     // Default destructor.
-    ~BatteryMeter();
+    ~BatteryMeterBase();
 
 
   // Setup functions.  Create your instance and run these functions in your "setup" routine.
   public:
-	  // Ideally, you should use the constructor for this, but if you need to modify them on the fly you can use this.
+    // Ideally, you should use the constructor for this, but if you need to modify them on the fly you can use this.
     void setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax);
 
-	  // You need to set the sensing pin and activation pin.
+    // You need to set the sensing pin and activation pin.
     void setSensingPin(unsigned int sensingPin);
 
     // If the battery meter is activated (lights on) by a button ,use this.  If you are using an
@@ -114,7 +78,7 @@ class BatteryMeter
     // By setting the activation pin, you default to MOMENTARY mode.  Override by using setMode.
     void setActivationPin(unsigned int activationPin, uint8_t activationLevel);
 
-	  // Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
+    // Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
     virtual void setLightPins(unsigned int ledPins[], LEVEL level, uint8_t ledOnLevel);
 	
     // Final initialization.
@@ -124,7 +88,7 @@ class BatteryMeter
   // Optional settings.
   public:
     // Change the mode.  Initially, it is assumed ALWAYSON.  If you set the activation pin, you default to MOMENTARY.  Use
-    // this to customize the bahavior.
+    // this to customize the behavior.
     void setMode(MODE mode);
 
     // The time between battery readings and updating lights.
@@ -166,7 +130,7 @@ class BatteryMeter
 
 
   // Members / variables.
-  // The underscorde denotes a variable that belongs to the class (not a local variable).
+  // The underscore denotes a variable that belongs to the class (not a local variable).
   protected:
     // LED output pins.
     unsigned int*    _ledPins;
@@ -179,10 +143,10 @@ class BatteryMeter
 
 
   private:
-    // The reading that is considered fully dischanged.  This is 2.7 volts for a lithium battery.
+    // The reading that is considered fully discharged.  This is 2.7 volts for a lithium battery.
     unsigned int    _batteryMin;
 
-    // The reading that is considered fully changed.  This is 4.2 volts for a lithium battery.
+    // The reading that is considered fully charged.  This is 4.2 volts for a lithium battery.
     unsigned int    _batteryMax;
 
     // Analog sensing pin.  The battery level is read from this pin.

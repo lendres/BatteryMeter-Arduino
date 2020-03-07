@@ -18,10 +18,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "BatteryMeter.h"
+#include "BatteryMeterBase.h"
 
-// Default contstructor.
-BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax) :
+// Constructor.
+BatteryMeterBase::BatteryMeterBase(unsigned int batteryMin, unsigned int batteryMax) :
   _ledPins(NULL),
   _batteryMin(batteryMin),
   _batteryMax(batteryMax),
@@ -31,7 +31,7 @@ BatteryMeter::BatteryMeter(unsigned int batteryMin, unsigned int batteryMax) :
   _updateTimer.setTimeOutTime(60000);
 }
 
-BatteryMeter::~BatteryMeter()
+BatteryMeterBase::~BatteryMeterBase()
 {
   if (_ledPins)
   {
@@ -39,13 +39,13 @@ BatteryMeter::~BatteryMeter()
   }
 }
 
-void BatteryMeter::setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax)
+void BatteryMeterBase::setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax)
 {
   _batteryMin     = batteryMin;
   _batteryMax     = batteryMax;
 }
 
-void BatteryMeter::setSensingPin(unsigned int sensingPin)
+void BatteryMeterBase::setSensingPin(unsigned int sensingPin)
 {
   _sensingPin     = sensingPin;
 
@@ -54,7 +54,7 @@ void BatteryMeter::setSensingPin(unsigned int sensingPin)
   digitalWrite(_sensingPin, LOW);
 }
 
-void BatteryMeter::setActivationPin(unsigned int activationPin, uint8_t activationLevel)
+void BatteryMeterBase::setActivationPin(unsigned int activationPin, uint8_t activationLevel)
 {
   _mode = MOMENTARY;
 
@@ -75,7 +75,7 @@ void BatteryMeter::setActivationPin(unsigned int activationPin, uint8_t activati
   }
 }
 
-void BatteryMeter::setLightPins(unsigned int ledPins[], LEVEL maxLevel, uint8_t ledOnLevel)
+void BatteryMeterBase::setLightPins(unsigned int ledPins[], LEVEL maxLevel, uint8_t ledOnLevel)
 {
 	_maxLevel   = maxLevel;
 	_ledPins    = new unsigned int[_maxLevel];
@@ -88,7 +88,7 @@ void BatteryMeter::setLightPins(unsigned int ledPins[], LEVEL maxLevel, uint8_t 
 	}
 }
 
-void BatteryMeter::begin()
+void BatteryMeterBase::begin()
 {
   // The width of each level is in the units read from the sensing pin.
   _levelWidth = ((float)_batteryMax - _batteryMin) / (_maxLevel);
@@ -135,7 +135,7 @@ void BatteryMeter::begin()
   #endif
 }
 
-void BatteryMeter::update()
+void BatteryMeterBase::update()
 {
   switch (_mode)
   {
@@ -175,23 +175,23 @@ void BatteryMeter::update()
   }
 }
 
-void BatteryMeter::setMode(MODE mode)
+void BatteryMeterBase::setMode(MODE mode)
 {
   _mode = mode;
 }
 
-void BatteryMeter::setUpdateInterval(uint32_t updateInterval)
+void BatteryMeterBase::setUpdateInterval(uint32_t updateInterval)
 {
   _updateTimer.setTimeOutTime(updateInterval);
 }
 
-float BatteryMeter::readSensePin()
+float BatteryMeterBase::readSensePin()
 {
   return analogRead(_sensingPin);
 }
 
 #ifdef BATTERYMETERDEBUG
-void BatteryMeter::printPinState(int pin, bool on)
+void BatteryMeterBase::printPinState(int pin, bool on)
 {
   Serial.print("[BatteryMeter] Level: ");
   Serial.print(pin+1);
@@ -209,7 +209,7 @@ void BatteryMeter::printPinState(int pin, bool on)
 }
 #endif
 
-void BatteryMeter::meter(bool forcedRun)
+void BatteryMeterBase::meter(bool forcedRun)
 {
   // If the timer is up we run.  If we have specified "forcedRun" it means run regardless
   // of whether the timer is up or not.
@@ -236,7 +236,7 @@ void BatteryMeter::meter(bool forcedRun)
   }
 }
 
-BatteryMeter::LEVEL BatteryMeter::getBatteryLevel(float sensePinReading)
+BatteryMeter::LEVEL BatteryMeterBase::getBatteryLevel(float sensePinReading)
 { 
   float currentLevelMax;
 
