@@ -1,5 +1,5 @@
-#include <ShiftRegister74HC595.h>
-#include <BatteryMeterShiftRegister.h>
+#include "ShiftRegister74HC595.h"
+#include "BatteryMeterShiftRegister.h"
 
 // The LEVEL of the battery meter is the number of levels/divisions/lights that you have on your
 // meter.  So LEVEL5 is for a five segment display or LEVEL3 for a 3 LED display.
@@ -12,19 +12,17 @@ int latchPin  = 4;
 
 // The light pins are the pins on the shift register, not the pins on the Arduino.  The number
 // of lights pins must be the same as the LEVEL number.  E.g. 5 lights for LEVEL5.
-unsigned int lightPins[]     = {0, 1, 2, 3, 4};
+unsigned int lightPins[]	= {0, 1, 2, 3, 4};
 
 // The sense pin and activation pin are pins on the Arduino.
-unsigned int sensePin        = A0;
-unsigned int activationPin   = 12;
+unsigned int sensePin		= A0;
+unsigned int activationPin	= 12;
 
 // Set the min and max reading values that correspond to 2.7 and 4.2 volts (for a lithium battery).
 // If you don't know what values to use, run the battery meter and with 2.7 volts connected and again
 // with 4.2 volts, while using debug messages, and note the readings.
-int batteryMin  = 650;
-int batteryMax  = 975;
-//int batteryMin  = 547;
-//int batteryMax  = 850;
+int batteryMin	= 650;
+int batteryMax	= 975;
 
 // If you want debug messages printed to the serial output.
 bool debugMessages = true;
@@ -38,33 +36,33 @@ BatteryMeterShiftRegister<1> meter(&shiftRegister, batteryMin, batteryMax, debug
 
 void setup()
 {
-  if (meter.usingDebuggingMessages())
-  {
-    Serial.begin(9600);
-  }
+	if (meter.usingDebuggingMessages())
+	{
+		Serial.begin(9600);
+	}
 
-  // Ensure all lights are off.
-  for (int i = 0; i < 8; i++)
-  {
-    shiftRegister.set(i, LOW);
-  }
-  delay(1000);
+	// Ensure all lights are off.
+	for (int i = 0; i < 8; i++)
+	{
+		shiftRegister.set(i, LOW);
+	}
+	delay(1000);
 
-  // Set the input sensing pin.
-  meter.setSensingPin(sensePin);
-  
-  // Set the light output pins.
-  meter.setLightPins(lightPins, level, HIGH);
+	// Set the input sensing pin.
+	meter.setSensingPin(sensePin);
+	
+	// Set the light output pins.
+	meter.setLightPins(lightPins, level, HIGH);
 
-  // Set the activation mode and activation button.
-  //meter.setActivationPin(activationPin, LOW);
-  meter.setUpdateInterval(1000);
+	// Set the activation mode and activation button.
+	//meter.setActivationPin(activationPin, LOW);
+	meter.setUpdateInterval(1000);
 
-  // Run the battery meter setup.
-  meter.begin();
+	// Run the battery meter setup.
+	meter.begin();
 }
 
 void loop()
 {
-  meter.update();
+	meter.update();
 }
