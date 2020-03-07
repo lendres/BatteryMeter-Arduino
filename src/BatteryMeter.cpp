@@ -140,16 +140,20 @@ void BatteryMeter::update()
   switch (_mode)
   {
     case ALWAYSON:
+    {
       // The meter will only run if the timer is up.
       meter(false);
       break;
+    }
 
     case MOMENTARY:
+    {
       if (digitalRead(_activationPin) == _activationLevel)
       {
-        // If it was off, we turn it on.  This has the effect of only updating
-        // the meter (lights) once per button press.  This prevents the light
-        // from flickering if the voltage is very close the a level boundary.
+        // If it was off, we turn it on.  If it was already off, do nothing.
+        // This has the effect of only updating the meter lights once per button
+        // press.  This prevents the light from flickering between two levels if
+        // the voltage is very close a level boundary.
         if (!_on)
         {
           _on = true;
@@ -167,6 +171,7 @@ void BatteryMeter::update()
         }
       }
       break;
+    }
   }
 }
 

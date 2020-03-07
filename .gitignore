@@ -1,2 +1,4 @@
 # Development files
 .development
+.vscode
+src.ino
