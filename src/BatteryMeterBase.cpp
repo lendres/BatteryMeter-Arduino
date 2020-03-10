@@ -1,21 +1,24 @@
 /*
-	BatteryMeter
-	Library for checking a battery and displaying the results on LEDs.
+	The MIT License (MIT)
 	
 	Copyright (c) 2019 Lance A. Endres
-
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as 
-	published by the Free Software Foundation, either version 3 of the 
-	License, or (at your option) any later version.
 	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+	Permission is hereby granted, free of charge, to any person obtaining a copy of
+	this software and associated documentation files (the "Software"), to deal in
+	the Software without restriction, including without limitation the rights to
+	use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+	the Software, and to permit persons to whom the Software is furnished to do so,
+	subject to the following conditions:
 	
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+	
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+	FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+	COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+	IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "BatteryMeterBase.h"
@@ -56,10 +59,9 @@ void BatteryMeterBase::setSensingPin(unsigned int sensingPin)
 
 void BatteryMeterBase::setActivationPin(unsigned int activationPin, uint8_t activationLevel)
 {
-	_mode = BatteryMeter::MOMENTARY;
-
-	_activationPin = activationPin;
-	_activationLevel = activationLevel;
+	_mode				= BatteryMeter::MOMENTARY;
+	_activationPin		= activationPin;
+	_activationLevel	= activationLevel;
 
 	// Set up our input pins.
 	pinMode(_activationPin, INPUT);
@@ -77,9 +79,9 @@ void BatteryMeterBase::setActivationPin(unsigned int activationPin, uint8_t acti
 
 void BatteryMeterBase::setLightPins(unsigned int ledPins[], BatteryMeter::LEVEL maxLevel, uint8_t ledOnLevel)
 {
-	_maxLevel = maxLevel;
-	_ledPins = new unsigned int[_maxLevel];
-	_ledOnLevel = ledOnLevel;
+	_maxLevel	= maxLevel;
+	_ledPins	= new unsigned int[_maxLevel];
+	_ledOnLevel	= ledOnLevel;
 
 	// We will make a copy of the values to keep the user from accidently deleting the memory.
 	for (int i = 0; i < _maxLevel; i++)
@@ -100,8 +102,8 @@ void BatteryMeterBase::begin()
 		meter(true);
 	}
 
-	// We are dubugging, print info.
 	#ifdef BATTERYMETERDEBUG
+		// We are dubugging, print info.
 		Serial.print("[BatteryMeter] Mode: ");
 		Serial.println(_mode);
 
