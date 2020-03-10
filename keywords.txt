@@ -9,40 +9,40 @@ BatteryMeterShiftRegister	KEYWORD1
 ################################
 # Functions
 ################################
-setMinMaxReadingValues	keyword2
-setSensingPin	keyword2
-setActivationPin	keyword2
-setLightPins	keyword2
-begin	keyword2
-setMode	keyword2
-setUpdateInterval	keyword2
-update	keyword2
-usingDebuggingMessages	keyword2
-readSensePin	keyword2
-initialize	keyword2
-meter	keyword2
-getBatteryLevel	keyword2
-setLights	keyword2
+setMinMaxReadingValues	KEYWORD2
+setSensingPin	KEYWORD2
+setActivationPin	KEYWORD2
+setLightPins	KEYWORD2
+begin	KEYWORD2
+setMode	KEYWORD2
+setUpdateInterval	KEYWORD2
+update	KEYWORD2
+usingDebuggingMessages	KEYWORD2
+readSensePin	KEYWORD2
+initialize	KEYWORD2
+meter	KEYWORD2
+getBatteryLevel	KEYWORD2
+setLights	KEYWORD2
 
-printPinState	keyword2
+printPinState	KEYWORD2
 
 ################################
 # Enums
 ################################
-LEVEL	literal1
-LEVEL0	literal2
-LEVEL1	literal2
-LEVEL2	literal2
-LEVEL3	literal2
-LEVEL4	literal2
-LEVEL5	literal2
-LEVEL6	literal2
-LEVEL7	literal2
-LEVEL8	literal2
-LEVEL9	literal2
-LEVEL10	literal2
+LEVEL	LITERAL1
+LEVEL0	LITERAL2
+LEVEL1	LITERAL2
+LEVEL2	LITERAL2
+LEVEL3	LITERAL2
+LEVEL4	LITERAL2
+LEVEL5	LITERAL2
+LEVEL6	LITERAL2
+LEVEL7	LITERAL2
+LEVEL8	LITERAL2
+LEVEL9	LITERAL2
+LEVEL10	LITERAL2
 
-MODE	literal1
-ALWAYSON	literal2
-LATCHING	literal2
-MOMENTARY	literal2
+MODE	LITERAL1
+ALWAYSON	LITERAL2
+LATCHING	LITERAL2
+MOMENTARY	LITERAL2

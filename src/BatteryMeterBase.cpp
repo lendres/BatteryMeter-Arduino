@@ -140,14 +140,11 @@ void BatteryMeterBase::update()
 	switch (_mode)
 	{
 		case BatteryMeter::ALWAYSON:
-		{
 			// The meter will only run if the timer is up.
 			meter(false);
 			break;
-		}
 
 		case BatteryMeter::MOMENTARY:
-		{
 			if (digitalRead(_activationPin) == _activationLevel)
 			{
 				// If it was off, we turn it on.  If it was already off, do nothing.
@@ -171,7 +168,6 @@ void BatteryMeterBase::update()
 				}
 			}
 			break;
-		}
 	}
 }
 

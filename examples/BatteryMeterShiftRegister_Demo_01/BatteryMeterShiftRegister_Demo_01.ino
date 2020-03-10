@@ -25,21 +25,19 @@ int batteryMin	= 650;
 int batteryMax	= 975;
 
 // If you want debug messages printed to the serial output.
-bool debugMessages = true;
-
+#define BATTERYMETERDEBUG
 
 // Create the instances.  It is assumed the shift register is managed (and used) elsewhere and
 // a pointer to it is passed to the battery meter.
 ShiftRegister74HC595<1> shiftRegister(dataPin, clockPin, latchPin);
-BatteryMeterShiftRegister<1> meter(&shiftRegister, batteryMin, batteryMax, debugMessages);
+BatteryMeterShiftRegister<1> meter(&shiftRegister, batteryMin, batteryMax);
 
 
 void setup()
 {
-	if (meter.usingDebuggingMessages())
-	{
+  #ifdef BATTERYMETERDEBUG
 		Serial.begin(9600);
-	}
+  #endif
 
 	// Ensure all lights are off.
 	for (int i = 0; i < 8; i++)
