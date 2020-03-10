@@ -42,12 +42,6 @@ BatteryMeterBase::~BatteryMeterBase()
 	}
 }
 
-void BatteryMeterBase::setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax)
-{
-	_batteryMin = batteryMin;
-	_batteryMax = batteryMax;
-}
-
 void BatteryMeterBase::setSensingPin(unsigned int sensingPin)
 {
 	_sensingPin = sensingPin;
@@ -173,6 +167,45 @@ void BatteryMeterBase::update()
 	}
 }
 
+float BatteryMeterBase::readSensePin()
+{
+	return analogRead(_sensingPin);
+}
+
+BatteryMeter::LEVEL BatteryMeterBase::getBatteryLevel()
+{
+	float sensePinReading = analogRead(_sensingPin);
+
+	#ifdef BATTERYMETERDEBUG
+		Serial.print("[BatteryMeter] Reading: ");
+		Serial.println(sensePinReading);
+	#endif
+
+	float currentLevelMax;
+
+	for (int i = 0; i < _maxLevel; i++)
+	{
+		// The levels are ints and the width is a float, so we will recalculate from the min (instead
+		// of just adding level each time) to limit rounding errors to +/-0.5.
+		currentLevelMax = _batteryMin + (i + 1) * _levelWidth;
+
+		if (sensePinReading < currentLevelMax)
+		{
+			// We found the current level, so return it.  No need to continue.
+			return (BatteryMeter::LEVEL)(i + 1);
+		}
+	}
+
+	// Over the max level.
+	return _maxLevel;
+}
+
+void BatteryMeterBase::setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax)
+{
+	_batteryMin = batteryMin;
+	_batteryMax = batteryMax;
+}
+
 void BatteryMeterBase::setMode(BatteryMeter::MODE mode)
 {
 	_mode = mode;
@@ -181,11 +214,6 @@ void BatteryMeterBase::setMode(BatteryMeter::MODE mode)
 void BatteryMeterBase::setUpdateInterval(uint32_t updateInterval)
 {
 	_updateTimer.setTimeOutTime(updateInterval);
-}
-
-float BatteryMeterBase::readSensePin()
-{
-	return analogRead(_sensingPin);
 }
 
 #ifdef BATTERYMETERDEBUG
@@ -213,8 +241,8 @@ void BatteryMeterBase::meter(bool forcedRun)
 	// of whether the timer is up or not.
 	if (_updateTimer.hasTimedOut() || forcedRun)
 	{
-		float sensePinReading = analogRead(_sensingPin);
-		BatteryMeter::LEVEL level = getBatteryLevel(sensePinReading);
+		
+		BatteryMeter::LEVEL level = getBatteryLevel();
 
 		// Set the lights.
 		setLights(level);
@@ -225,32 +253,8 @@ void BatteryMeterBase::meter(bool forcedRun)
 		// We we are dubugging, print the level.  LEVEL is zero based so we add one
 		// to get the human version.
 		#ifdef BATTERYMETERDEBUG
-			Serial.print("[BatteryMeter] Reading: ");
-			Serial.println(sensePinReading);
-
 			Serial.print("[BatteryMeter] Battery level: ");
 			Serial.println(level);
 		#endif
 	}
-}
-
-BatteryMeter::LEVEL BatteryMeterBase::getBatteryLevel(float sensePinReading)
-{
-	float currentLevelMax;
-
-	for (int i = 0; i < _maxLevel; i++)
-	{
-		// The levels are ints and the width is a float, so we will recalculate from the min (instead
-		// of just adding level each time) to limit rounding errors to +/-0.5.
-		currentLevelMax = _batteryMin + (i + 1) * _levelWidth;
-
-		if (sensePinReading < currentLevelMax)
-		{
-			// We found the current level, so return it.  No need to continue.
-			return (BatteryMeter::LEVEL)(i + 1);
-		}
-	}
-
-	// Over the max level.
-	return _maxLevel;
 }

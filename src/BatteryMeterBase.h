@@ -23,13 +23,13 @@
 
 /*
 	Example lithium battery voltages and readings:
-						Readings     Voltage 
-					 min    max   min   max 
-	Level1  552.0  614.6  2.7  3.0
-	Level2  614.6  677.2  3.0  3.3
-	Level3  677.2  739.8  3.3  3.6
-	Level4  739.8  802.4  3.6  3.9
-	Level5  802.4  865.0  3.9  4.2
+			Readings      Voltage 
+			min    max    min  max 
+	Level1	552.0  614.6  2.7  3.0
+	Level2	614.6  677.2  3.0  3.3
+	Level3	677.2  739.8  3.3  3.6
+	Level4	739.8  802.4  3.6  3.9
+	Level5	802.4  865.0  3.9  4.2
 */
 
 /*
@@ -39,6 +39,9 @@
 		- Be careful to get the right library, there are several timer libraries and even more than one "SoftTimer" library.
 		- Can be installed from Arduino IDE Library Manager.
 		- https://github.com/end2endzone/SoftTimers
+
+	ButtonSuite by Lance A. Endres
+		- https://github.com/lendres/ButtonSuite-Arduino
 */
 
 /*
@@ -67,10 +70,7 @@ class BatteryMeterBase
 
 	// Required setup functions.  Run these functions in your "setup" routine.
 	public:
-		// Ideally, you should use the constructor for this, but if you need to modify them on the fly you can use this.
-		void setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax);
-
-		// You need to set the sensing pin and activation pin.
+		// The sensing pin is connected to the positive side of the battery so the voltage can be read.
 		void setSensingPin(unsigned int sensingPin);
 
 		// If the battery meter is activated (lights on) by a button, use this.  If you are using an
@@ -86,6 +86,9 @@ class BatteryMeterBase
 
 	// Optional settings.
 	public:
+		// Ideally, you should use the constructor for this, but if you need to modify them on the fly you can use this.
+		void setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax);
+
 		// Change the mode.  Initially, it is assumed ALWAYSON.  If you set the activation pin, you default to MOMENTARY.  Use
 		// this to customize the behavior.
 		void setMode(BatteryMeter::MODE mode);
@@ -98,10 +101,13 @@ class BatteryMeterBase
 		// Entry point to the battery meter.  Checks for any state changes and updates accordingly.
 		void update();
 
-	// Debugging functions.
+	// Debugging and helper functions.
 	public:
 		// Gets the reading from the sensing pin.
 		float readSensePin();
+
+		// Converts the sensing pin reading into a battery level.
+		BatteryMeter::LEVEL getBatteryLevel();
 
 	// Protected debugging functions.  Used by the derived classes.
 	protected:
@@ -114,9 +120,6 @@ class BatteryMeterBase
 	private:
 		// The main work of finding the level and setting the lights.
 		void meter(bool forcedRun);
-
-		// Converts the sensing pin reading into a battery level.
-		BatteryMeter::LEVEL getBatteryLevel(float sensePinReading);
 
 		// Turns on the lights associated with the level.
 		virtual void setLights(BatteryMeter::LEVEL level) = 0;
