@@ -24,12 +24,12 @@
 #include "BatteryMeterBase.h"
 
 // Constructor.
-BatteryMeterBase::BatteryMeterBase(unsigned int batteryMin, unsigned int batteryMax) :
+BatteryMeterBase::BatteryMeterBase(unsigned int batteryMin, unsigned int batteryMax, BatteryMeter::LEVEL maxLevel) :
 	_ledPins(NULL),
+	_ledOnLevel(HIGH),
+	_maxLevel(maxLevel),
 	_batteryMin(batteryMin),
-	_batteryMax(batteryMax),
-	_mode(BatteryMeter::ALWAYSON),
-	_on(false)
+	_batteryMax(batteryMax)
 {
 	_updateTimer.setTimeOutTime(60000);
 }
@@ -51,29 +51,18 @@ void BatteryMeterBase::setSensingPin(unsigned int sensingPin)
 	digitalWrite(_sensingPin, LOW);
 }
 
-void BatteryMeterBase::setActivationPin(unsigned int activationPin, uint8_t activationLevel)
+void BatteryMeterBase::setActivationButton(SimpleButton* activationButton)
 {
-	_mode				= BatteryMeter::MOMENTARY;
-	_activationPin		= activationPin;
-	_activationLevel	= activationLevel;
-
-	// Set up our input pins.
-	pinMode(_activationPin, INPUT);
-
-	// The long winded, but API appropriate way to specify write levels.
-	if (_activationLevel == LOW)
-	{
-		digitalWrite(_activationPin, HIGH);
-	}
-	else
-	{
-		digitalWrite(_activationPin, LOW);
-	}
+	_activationButton	= activationButton;
 }
 
-void BatteryMeterBase::setLightPins(unsigned int ledPins[], BatteryMeter::LEVEL maxLevel, uint8_t ledOnLevel)
+void BatteryMeterBase::setActivationButton(SimpleButton &activationButton)
 {
-	_maxLevel	= maxLevel;
+	_activationButton	= &activationButton;
+}
+
+void BatteryMeterBase::setLightPins(unsigned int ledPins[], uint8_t ledOnLevel)
+{
 	_ledPins	= new unsigned int[_maxLevel];
 	_ledOnLevel	= ledOnLevel;
 
@@ -89,9 +78,10 @@ void BatteryMeterBase::begin()
 	// The width of each level is in the units read from the sensing pin.
 	_levelWidth = ((float)_batteryMax - _batteryMin) / (_maxLevel);
 
-	// If in always on mode, we need to run the meter once so it starts immediately without
-	// waiting for the timer to complete.
-	if (_mode == BatteryMeter::ALWAYSON)
+	// If the button is already on, we need to run the meter once so it starts immediately without
+	// waiting for the timer to complete.  Otherwise, a delay will occur.
+	BUTTONSTATUS buttonStatus = _activationButton->getStatus();
+	if (buttonStatus == ISPRESSED || buttonStatus == WASPRESSED)
 	{
 		meter(true);
 	}
@@ -133,37 +123,22 @@ void BatteryMeterBase::begin()
 
 void BatteryMeterBase::update()
 {
-	switch (_mode)
+	switch (_activationButton->getStatus())
 	{
-		case BatteryMeter::ALWAYSON:
-			// The meter will only run if the timer is up.
+		case WASPRESSED:
+			// The button was just pressed, meter immediately.
+			meter(true);
+			break;
+
+		case ISPRESSED:
+			// The button is pressed, meter when the timer is up.
 			meter(false);
 			break;
 
-		case BatteryMeter::MOMENTARY:
-			if (digitalRead(_activationPin) == _activationLevel)
-			{
-				// If it was off, we turn it on.  If it was already off, do nothing.
-				// This has the effect of only updating the meter lights once per button
-				// press.  This prevents the light from flickering between two levels if
-				// the voltage is very close a level boundary.
-				if (!_on)
-				{
-					_on = true;
-					meter(true);
-				}
-			}
-			else
-			{
-				// If on, turn off, otherwise we don't need to do anything.
-				if (_on)
-				{
-					// We are not on (button is not pressed).
-					_on = false;
-					setLights(BatteryMeter::LEVEL0);
-				}
-			}
-			break;
+		default:
+			// Turn the lights off.
+			setLights(BatteryMeter::LEVEL0);
+
 	}
 }
 
@@ -204,11 +179,6 @@ void BatteryMeterBase::setMinMaxReadingValues(unsigned int batteryMin, unsigned 
 {
 	_batteryMin = batteryMin;
 	_batteryMax = batteryMax;
-}
-
-void BatteryMeterBase::setMode(BatteryMeter::MODE mode)
-{
-	_mode = mode;
 }
 
 void BatteryMeterBase::setUpdateInterval(uint32_t updateInterval)

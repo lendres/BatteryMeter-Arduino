@@ -56,6 +56,7 @@
 
 #include <Arduino.h>
 #include "SoftTimers.h"
+#include "SimpleButton.h"
 #include "BatteryMeterEnums.h"
 
 class BatteryMeterBase
@@ -63,7 +64,7 @@ class BatteryMeterBase
 	// Constructors and destructor.
 	public:
 		// Constructor.
-		BatteryMeterBase(unsigned int batteryMin, unsigned int batteryMax);
+		BatteryMeterBase(unsigned int batteryMin, unsigned int batteryMax, BatteryMeter::LEVEL level);
 
 		// Default destructor.
 		~BatteryMeterBase();
@@ -73,13 +74,15 @@ class BatteryMeterBase
 		// The sensing pin is connected to the positive side of the battery so the voltage can be read.
 		void setSensingPin(unsigned int sensingPin);
 
+		// This determines how the 
 		// If the battery meter is activated (lights on) by a button, use this.  If you are using an
 		// always on meter, you do not need to set this.
 		// By setting the activation pin, you default to MOMENTARY mode.  Override by using setMode.
-		void setActivationPin(unsigned int activationPin, uint8_t activationLevel);
+		void setActivationButton(SimpleButton* activationButton);
+		void setActivationButton(SimpleButton &activationButton);
 
-		// Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
-		virtual void setLightPins(unsigned int ledPins[], BatteryMeter::LEVEL level, uint8_t ledOnLevel);
+		// Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL used in the constructor.
+		virtual void setLightPins(unsigned int ledPins[], uint8_t ledOnLevel);
 
 		// Initialization.  Run this after the other setup functions.
 		void begin();
@@ -88,10 +91,6 @@ class BatteryMeterBase
 	public:
 		// Ideally, you should use the constructor for this, but if you need to modify them on the fly you can use this.
 		void setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax);
-
-		// Change the mode.  Initially, it is assumed ALWAYSON.  If you set the activation pin, you default to MOMENTARY.  Use
-		// this to customize the behavior.
-		void setMode(BatteryMeter::MODE mode);
 
 		// The time between battery readings and updating lights.
 		void setUpdateInterval(uint32_t updateInterval);
@@ -146,18 +145,13 @@ class BatteryMeterBase
 		// Analog sensing pin.  The battery level is read from this pin.
 		unsigned int			_sensingPin;
 
-		// Activation mode.  Specifies when and how the LEDs are turned on.
-		BatteryMeter::MODE		_mode;
-
-		// Pin for the button that turns the display (LEDs) on and off).
-		unsigned int			_activationPin;
-		uint8_t					_activationLevel;
+		// Button that controls when the lights on activated.
+		SimpleButton*			_activationButton;
 
 		// The numerical value that each level has.  I.e., (batteryMax-batteryMin)/numberOfLevls.
 		float					_levelWidth;
 
 		// Used to remember the state.
-		bool					_on;
 		SoftTimer				_updateTimer;
 };
 

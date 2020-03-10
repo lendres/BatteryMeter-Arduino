@@ -45,7 +45,7 @@ class BatteryMeterShiftRegister : public BatteryMeterBase
 	// Constructors. 
 	public:
 		// Constructor.
-		BatteryMeterShiftRegister(ShiftRegister74HC595<numberOfShiftRegisters>* shiftRegister, unsigned int batteryMin, unsigned int batteryMax);
+		BatteryMeterShiftRegister(ShiftRegister74HC595<numberOfShiftRegisters>* shiftRegister, unsigned int batteryMin, unsigned int batteryMax, BatteryMeter::LEVEL level);
 
 		// Default destructor.
 		~BatteryMeterShiftRegister();

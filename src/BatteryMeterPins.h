@@ -40,7 +40,7 @@ class BatteryMeterPins : public BatteryMeterBase
 	// Constructors.
 	public:
 		// Constructor.
-		BatteryMeterPins(unsigned int batteryMin, unsigned int batteryMax);
+		BatteryMeterPins(unsigned int batteryMin, unsigned int batteryMax, BatteryMeter::LEVEL level);
 
 		// Default destructor.
 		~BatteryMeterPins();
@@ -48,7 +48,7 @@ class BatteryMeterPins : public BatteryMeterBase
 		// Setup functions.  Create your instance and run these functions in your "setup" routine.
 	public:
 		// Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
-		void setLightPins(unsigned int ledPins[], BatteryMeter::LEVEL level, uint8_t ledOnLevel);
+		void setLightPins(unsigned int ledPins[], uint8_t ledOnLevel);
 
 		// Private functions.  The user need not worry about these.
 	private:

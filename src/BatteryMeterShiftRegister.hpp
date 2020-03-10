@@ -22,8 +22,8 @@
 */
 
 template <uint8_t numberOfShiftRegisters>
-BatteryMeterShiftRegister<numberOfShiftRegisters>::BatteryMeterShiftRegister(ShiftRegister74HC595<numberOfShiftRegisters>* shiftRegister, unsigned int batteryMin, unsigned int batteryMax) :
-	BatteryMeterBase(batteryMin, batteryMax),
+BatteryMeterShiftRegister<numberOfShiftRegisters>::BatteryMeterShiftRegister(ShiftRegister74HC595<numberOfShiftRegisters>* shiftRegister, unsigned int batteryMin, unsigned int batteryMax, BatteryMeter::LEVEL level) :
+	BatteryMeterBase(batteryMin, batteryMax, level),
 	_shiftRegister(shiftRegister)
 {
 }
