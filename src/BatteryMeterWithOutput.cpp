@@ -21,20 +21,18 @@
 	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "BatteryMeterBase.h"
+#include "BatteryMeterWithOutput.h"
 
 // Constructor.
-BatteryMeterBase::BatteryMeterBase(unsigned int batteryMin, unsigned int batteryMax, BatteryMeter::LEVEL maxLevel) :
+BatteryMeterWithOutput::BatteryMeterWithOutput(unsigned int batteryMin, unsigned int batteryMax, Battery::LEVEL maxLevel) :
+	BatteryMeter(batteryMin, batteryMax, maxLevel),
 	_ledPins(NULL),
-	_ledOnLevel(HIGH),
-	_maxLevel(maxLevel),
-	_batteryMin(batteryMin),
-	_batteryMax(batteryMax)
+	_ledOnLevel(HIGH)
 {
-	_updateTimer.setTimeOutTime(60000);
+  _updateTimer.setTimeOutTime(120000);
 }
 
-BatteryMeterBase::~BatteryMeterBase()
+BatteryMeterWithOutput::~BatteryMeterWithOutput()
 {
 	if (_ledPins)
 	{
@@ -42,26 +40,17 @@ BatteryMeterBase::~BatteryMeterBase()
 	}
 }
 
-void BatteryMeterBase::setSensingPin(unsigned int sensingPin)
-{
-	_sensingPin = sensingPin;
-
-	// Set up our input pin.
-	pinMode(_sensingPin, INPUT);
-	digitalWrite(_sensingPin, LOW);
-}
-
-void BatteryMeterBase::setActivationButton(SimpleButton* activationButton)
+void BatteryMeterWithOutput::setActivationButton(SimpleButton* activationButton)
 {
 	_activationButton	= activationButton;
 }
 
-void BatteryMeterBase::setActivationButton(SimpleButton &activationButton)
+void BatteryMeterWithOutput::setActivationButton(SimpleButton& activationButton)
 {
 	_activationButton	= &activationButton;
 }
 
-void BatteryMeterBase::setLightPins(unsigned int ledPins[], uint8_t ledOnLevel)
+void BatteryMeterWithOutput::setLightPins(unsigned int ledPins[], uint8_t ledOnLevel)
 {
 	_ledPins	= new unsigned int[_maxLevel];
 	_ledOnLevel	= ledOnLevel;
@@ -73,10 +62,9 @@ void BatteryMeterBase::setLightPins(unsigned int ledPins[], uint8_t ledOnLevel)
 	}
 }
 
-void BatteryMeterBase::begin()
+void BatteryMeterWithOutput::begin()
 {
-	// The width of each level is in the units read from the sensing pin.
-	_levelWidth = ((float)_batteryMax - _batteryMin) / (_maxLevel);
+	BatteryMeter::begin();
 
 	// If the button is already on, we need to run the meter once so it starts immediately without
 	// waiting for the timer to complete.  Otherwise, a delay will occur.
@@ -87,28 +75,6 @@ void BatteryMeterBase::begin()
 	}
 
 	#ifdef BATTERYMETERDEBUG
-		// We are dubugging, print info.
-		Serial.print("[BatteryMeter] Mode: ");
-		Serial.println(_mode);
-
-		Serial.print("[BatteryMeter] Battery level reading at low: ");
-		Serial.println(_batteryMin);
-
-		Serial.print("[BatteryMeter] Battery level reading at high: ");
-		Serial.println(_batteryMax);
-
-		Serial.print("[BatteryMeter] Number of battery levels: ");
-		Serial.println(_maxLevel);
-
-		Serial.print("[BatteryMeter] Level  width: ");
-		Serial.println(_levelWidth);
-
-		Serial.print("[BatteryMeter] Sensing pin: ");
-		Serial.println(_sensingPin);
-
-		Serial.print("[BatteryMeter] Activation pin: ");
-		Serial.println(_activationPin);
-
 		Serial.print("[BatteryMeter] Light pins:");
 		for (int i = 0; i < _maxLevel; i++)
 		{
@@ -121,7 +87,12 @@ void BatteryMeterBase::begin()
 	#endif
 }
 
-void BatteryMeterBase::update()
+void BatteryMeterWithOutput::setUpdateInterval(uint32_t updateInterval)
+{
+	_updateTimer.setTimeOutTime(updateInterval);
+}
+
+void BatteryMeterWithOutput::update()
 {
 	switch (_activationButton->getStatus())
 	{
@@ -137,57 +108,13 @@ void BatteryMeterBase::update()
 
 		default:
 			// Turn the lights off.
-			setLights(BatteryMeter::LEVEL0);
+			setLights(Battery::LEVEL0);
 
 	}
-}
-
-float BatteryMeterBase::readSensePin()
-{
-	return analogRead(_sensingPin);
-}
-
-BatteryMeter::LEVEL BatteryMeterBase::getBatteryLevel()
-{
-	float sensePinReading = analogRead(_sensingPin);
-
-	#ifdef BATTERYMETERDEBUG
-		Serial.print("[BatteryMeter] Reading: ");
-		Serial.println(sensePinReading);
-	#endif
-
-	float currentLevelMax;
-
-	for (int i = 0; i < _maxLevel; i++)
-	{
-		// The levels are ints and the width is a float, so we will recalculate from the min (instead
-		// of just adding level each time) to limit rounding errors to +/-0.5.
-		currentLevelMax = _batteryMin + (i + 1) * _levelWidth;
-
-		if (sensePinReading < currentLevelMax)
-		{
-			// We found the current level, so return it.  No need to continue.
-			return (BatteryMeter::LEVEL)(i + 1);
-		}
-	}
-
-	// Over the max level.
-	return _maxLevel;
-}
-
-void BatteryMeterBase::setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax)
-{
-	_batteryMin = batteryMin;
-	_batteryMax = batteryMax;
-}
-
-void BatteryMeterBase::setUpdateInterval(uint32_t updateInterval)
-{
-	_updateTimer.setTimeOutTime(updateInterval);
 }
 
 #ifdef BATTERYMETERDEBUG
-void BatteryMeterBase::printPinState(int pin, bool on)
+void BatteryMeterWithOutput::printPinState(int pin, bool on)
 {
 	Serial.print("[BatteryMeter] Level: ");
 	Serial.print(pin + 1);
@@ -205,14 +132,14 @@ void BatteryMeterBase::printPinState(int pin, bool on)
 }
 #endif
 
-void BatteryMeterBase::meter(bool forcedRun)
+void BatteryMeterWithOutput::meter(bool forcedRun)
 {
 	// If the timer is up we run.  If we have specified "forcedRun" it means run regardless
 	// of whether the timer is up or not.
 	if (_updateTimer.hasTimedOut() || forcedRun)
 	{
 		
-		BatteryMeter::LEVEL level = getBatteryLevel();
+		Battery::LEVEL level = getBatteryLevel();
 
 		// Set the lights.
 		setLights(level);

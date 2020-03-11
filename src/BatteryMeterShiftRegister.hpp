@@ -22,8 +22,8 @@
 */
 
 template <uint8_t numberOfShiftRegisters>
-BatteryMeterShiftRegister<numberOfShiftRegisters>::BatteryMeterShiftRegister(ShiftRegister74HC595<numberOfShiftRegisters>* shiftRegister, unsigned int batteryMin, unsigned int batteryMax, BatteryMeter::LEVEL level) :
-	BatteryMeterBase(batteryMin, batteryMax, level),
+BatteryMeterShiftRegister<numberOfShiftRegisters>::BatteryMeterShiftRegister(ShiftRegister74HC595<numberOfShiftRegisters>* shiftRegister, unsigned int batteryMin, unsigned int batteryMax, Battery::LEVEL level) :
+	BatteryMeterWithOutput(batteryMin, batteryMax, level),
 	_shiftRegister(shiftRegister)
 {
 }
@@ -34,7 +34,7 @@ BatteryMeterShiftRegister<numberOfShiftRegisters>::~BatteryMeterShiftRegister()
 }
 
 template <uint8_t numberOfShiftRegisters>
-void BatteryMeterShiftRegister<numberOfShiftRegisters>::setLights(BatteryMeter::LEVEL level)
+void BatteryMeterShiftRegister<numberOfShiftRegisters>::setLights(Battery::LEVEL level)
 {
 	// Turn on the lights up to the current level.  We use the "no update" version
 	// of set so we can set the values for all the lights and then activate once.

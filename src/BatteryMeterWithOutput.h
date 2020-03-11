@@ -22,64 +22,33 @@
 */
 
 /*
-	Example lithium battery voltages and readings:
-			Readings      Voltage 
-			min    max    min  max 
-	Level1	552.0  614.6  2.7  3.0
-	Level2	614.6  677.2  3.0  3.3
-	Level3	677.2  739.8  3.3  3.6
-	Level4	739.8  802.4  3.6  3.9
-	Level5	802.4  865.0  3.9  4.2
+	Provides the base functionality for using output lights with the battery meter.
 */
 
-/*
-	You must have the following libraries to run this software.
-
-	SoftTimers by Antoine Beauchamp
-		- Be careful to get the right library, there are several timer libraries and even more than one "SoftTimer" library.
-		- Can be installed from Arduino IDE Library Manager.
-		- https://github.com/end2endzone/SoftTimers
-
-	ButtonSuite by Lance A. Endres
-		- https://github.com/lendres/ButtonSuite-Arduino
-*/
-
-/*
-	If you want debugging messages printed to the serial monitor, enable the serial monitor and
-	use the following line in your file:
-	
-	#define BATTERYMETERDEBUG
-*/
-
-#ifndef BATTERYMETERBASE_H
-#define BATTERYMETERBASE_H
+#ifndef BATTERYMETERWITHOUTPUT_H
+#define BATTERYMETERWITHOUTPUT_H
 
 #include <Arduino.h>
 #include "SoftTimers.h"
-#include "SimpleButton.h"
-#include "BatteryMeterEnums.h"
+#include "BatteryMeter.h"
 
-class BatteryMeterBase
+class BatteryMeterWithOutput : public BatteryMeter
 {
 	// Constructors and destructor.
 	public:
 		// Constructor.
-		BatteryMeterBase(unsigned int batteryMin, unsigned int batteryMax, BatteryMeter::LEVEL level);
+		BatteryMeterWithOutput(unsigned int batteryMin, unsigned int batteryMax, Battery::LEVEL level);
 
 		// Default destructor.
-		~BatteryMeterBase();
+		~BatteryMeterWithOutput();
 
 	// Required setup functions.  Run these functions in your "setup" routine.
 	public:
-		// The sensing pin is connected to the positive side of the battery so the voltage can be read.
-		void setSensingPin(unsigned int sensingPin);
-
-		// This determines how the 
-		// If the battery meter is activated (lights on) by a button, use this.  If you are using an
-		// always on meter, you do not need to set this.
-		// By setting the activation pin, you default to MOMENTARY mode.  Override by using setMode.
+		// This determines how the battery meter is activated (turns lights on).  Depending on class type passed (a class
+		// derived from SimpleButton).  Both functions do the same thing, they just allow the argument to be passed in
+		// different ways.
 		void setActivationButton(SimpleButton* activationButton);
-		void setActivationButton(SimpleButton &activationButton);
+		void setActivationButton(SimpleButton& activationButton);
 
 		// Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL used in the constructor.
 		virtual void setLightPins(unsigned int ledPins[], uint8_t ledOnLevel);
@@ -89,9 +58,6 @@ class BatteryMeterBase
 
 	// Optional settings.
 	public:
-		// Ideally, you should use the constructor for this, but if you need to modify them on the fly you can use this.
-		void setMinMaxReadingValues(unsigned int batteryMin, unsigned int batteryMax);
-
 		// The time between battery readings and updating lights.
 		void setUpdateInterval(uint32_t updateInterval);
 
@@ -99,14 +65,6 @@ class BatteryMeterBase
 	public:
 		// Entry point to the battery meter.  Checks for any state changes and updates accordingly.
 		void update();
-
-	// Debugging and helper functions.
-	public:
-		// Gets the reading from the sensing pin.
-		float readSensePin();
-
-		// Converts the sensing pin reading into a battery level.
-		BatteryMeter::LEVEL getBatteryLevel();
 
 	// Protected debugging functions.  Used by the derived classes.
 	protected:
@@ -121,7 +79,7 @@ class BatteryMeterBase
 		void meter(bool forcedRun);
 
 		// Turns on the lights associated with the level.
-		virtual void setLights(BatteryMeter::LEVEL level) = 0;
+		virtual void setLights(Battery::LEVEL level) = 0;
 
 	// Members / variables.
 	// The underscore denotes a variable that belongs to the class (not a local variable).
@@ -132,26 +90,11 @@ class BatteryMeterBase
 		// The level (HIGH or LOW) to use to turn the LEDs on.
 		uint8_t					_ledOnLevel;
 
-		// Number of levels which is the number of output segments or LEDs.
-		BatteryMeter::LEVEL		_maxLevel;
-
 	private:
-		// The reading that is considered fully discharged.  This is 2.7 volts for a lithium battery.
-		unsigned int			_batteryMin;
-
-		// The reading that is considered fully charged.  This is 4.2 volts for a lithium battery.
-		unsigned int			_batteryMax;
-
-		// Analog sensing pin.  The battery level is read from this pin.
-		unsigned int			_sensingPin;
-
 		// Button that controls when the lights on activated.
 		SimpleButton*			_activationButton;
 
-		// The numerical value that each level has.  I.e., (batteryMax-batteryMin)/numberOfLevls.
-		float					_levelWidth;
-
-		// Used to remember the state.
+		// Used to prevent the meter level from bouncing around if the reading is between two levels.
 		SoftTimer				_updateTimer;
 };
 

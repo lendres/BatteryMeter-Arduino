@@ -33,30 +33,30 @@
 #define BATTERYMETERPINS_H
 
 #include <Arduino.h>
-#include "BatteryMeterBase.h"
+#include "BatteryMeterWithOutput.h"
 
-class BatteryMeterPins : public BatteryMeterBase
+class BatteryMeterPins : public BatteryMeterWithOutput
 {
 	// Constructors.
 	public:
 		// Constructor.
-		BatteryMeterPins(unsigned int batteryMin, unsigned int batteryMax, BatteryMeter::LEVEL level);
+		BatteryMeterPins(unsigned int batteryMin, unsigned int batteryMax, Battery::LEVEL level);
 
 		// Default destructor.
 		~BatteryMeterPins();
 
-		// Setup functions.  Create your instance and run these functions in your "setup" routine.
+	// Setup functions.  Create your instance and run these functions in your "setup" routine.
 	public:
 		// Set the pins the lights are on.  The number of entries in ledPins should match the LEVEL.
 		void setLightPins(unsigned int ledPins[], uint8_t ledOnLevel);
 
-		// Private functions.  The user need not worry about these.
+	// Private functions.  The user need not worry about these.
 	private:
 		// Turns on the lights associated with the level.
-		void setLights(BatteryMeter::LEVEL level);
+		void setLights(Battery::LEVEL level);
 
-		// Members / variables.
-		// The underscorde denotes a variable that belongs to the class (not a local variable).
+	// Members / variables.
+	// The underscorde denotes a variable that belongs to the class (not a local variable).
 	private:
 };
 

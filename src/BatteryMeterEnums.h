@@ -1,7 +1,7 @@
 #ifndef BATTERYMETERENUMS_H
 #define BATTERYMETERENUMS_H
 
-namespace BatteryMeter
+namespace Battery
 {
 	// The meter levels.  This is the number of lights you want to display.
 	// Example: For a 3 segment display or 3 LEDs you would use LEVEL3.
@@ -21,20 +21,6 @@ namespace BatteryMeter
 		LEVEL10
 	};
 
-	// The mode for the display.
-	enum MODE
-	{
-		// The display (LEDs) are always on.
-		ALWAYSON,
-
-		// The display state (on or off) is toggled by the activate pin.  Press once to turn
-		// on, press again to turn off.
-		//      LATCHING,
-
-		// The display turns on when the activate pin is pressed and turns off when the
-		// activate pin is released.
-		MOMENTARY
-	};
 } // namespace BatteryMeter
 
 #endif

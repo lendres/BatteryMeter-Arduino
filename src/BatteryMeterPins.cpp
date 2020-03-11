@@ -23,8 +23,8 @@
 
 #include "BatteryMeterPins.h"
 
-BatteryMeterPins::BatteryMeterPins(unsigned int batteryMin, unsigned int batteryMax, BatteryMeter::LEVEL level) :
-	BatteryMeterBase(batteryMin, batteryMax, level)
+BatteryMeterPins::BatteryMeterPins(unsigned int batteryMin, unsigned int batteryMax, Battery::LEVEL level) :
+	BatteryMeterWithOutput(batteryMin, batteryMax, level)
 {
 }
 
@@ -34,7 +34,7 @@ BatteryMeterPins::~BatteryMeterPins()
 
 void BatteryMeterPins::setLightPins(unsigned int ledPins[], uint8_t ledOnLevel)
 {
-	BatteryMeterBase::setLightPins(ledPins, ledOnLevel);
+	BatteryMeterWithOutput::setLightPins(ledPins, ledOnLevel);
 
 	// The long winded, but API appropriate way to specify write levels.
 	uint8_t initialLevel = LOW;
@@ -51,7 +51,7 @@ void BatteryMeterPins::setLightPins(unsigned int ledPins[], uint8_t ledOnLevel)
 	}
 }
 
-void BatteryMeterPins::setLights(BatteryMeter::LEVEL level)
+void BatteryMeterPins::setLights(Battery::LEVEL level)
 {
 	// Turn on the lights up to the current level.
 	for (int i = 0; i < level; i++)

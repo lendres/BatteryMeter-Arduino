@@ -36,16 +36,16 @@
 #define BATTERYMETERSHIFTREGISTER_H
 
 #include <Arduino.h>
-#include "BatteryMeterBase.h"
 #include "ShiftRegister74HC595.h"
+#include "BatteryMeterWithOutput.h"
 
 template <uint8_t numberOfShiftRegisters>
-class BatteryMeterShiftRegister : public BatteryMeterBase
+class BatteryMeterShiftRegister : public BatteryMeterWithOutput
 {
 	// Constructors. 
 	public:
 		// Constructor.
-		BatteryMeterShiftRegister(ShiftRegister74HC595<numberOfShiftRegisters>* shiftRegister, unsigned int batteryMin, unsigned int batteryMax, BatteryMeter::LEVEL level);
+		BatteryMeterShiftRegister(ShiftRegister74HC595<numberOfShiftRegisters>* shiftRegister, unsigned int batteryMin, unsigned int batteryMax, Battery::LEVEL level);
 
 		// Default destructor.
 		~BatteryMeterShiftRegister();
@@ -53,7 +53,7 @@ class BatteryMeterShiftRegister : public BatteryMeterBase
 		// Private functions.  The user need not worry about these.
 	private:
 		// Turns on the lights associated with the level.
-		void setLights(BatteryMeter::LEVEL level);
+		void setLights(Battery::LEVEL level);
 
 	// Members / variables.
 	// The underscore denotes a variable that belongs to the class (not a local variable in a function).

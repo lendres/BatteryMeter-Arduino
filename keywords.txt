@@ -11,20 +11,20 @@ BatteryMeterShiftRegister	KEYWORD1
 ################################
 setMinMaxReadingValues	KEYWORD2
 setSensingPin	KEYWORD2
-setActivationPin	KEYWORD2
+setActivationButton	KEYWORD2
 setLightPins	KEYWORD2
 begin	KEYWORD2
-setMode	KEYWORD2
+setMinMaxReadingValues	KEYWORD2
 setUpdateInterval	KEYWORD2
 update	KEYWORD2
-usingDebuggingMessages	KEYWORD2
-readSensePin	KEYWORD2
-initialize	KEYWORD2
-meter	KEYWORD2
-getBatteryLevel	KEYWORD2
-setLights	KEYWORD2
 
+usingDebuggingMessages	KEYWORD2
+
+readSensePin	KEYWORD2
+getBatteryLevel	KEYWORD2
 printPinState	KEYWORD2
+meter	KEYWORD2
+setLights	KEYWORD2
 
 ################################
 # Enums
