@@ -16,7 +16,7 @@ const int numberOfShiftRegisters = 1;
 
 // The LEVEL of the battery meter is the number of levels/divisions/lights that you have on your
 // meter.  So LEVEL5 is for a five segment display or LEVEL3 for a 3 LED display.
-BatteryMeter::LEVEL level = BatteryMeter::LEVEL8;
+Battery::LEVEL level = Battery::LEVEL8;
 
 // The light pins are the pins on the shift register, not the pins on the Arduino.  The number
 // of lights pins must be the same as the LEVEL number.  E.g. 5 lights for LEVEL5.
@@ -43,7 +43,7 @@ int batteryMax	= 975;
 // Create the instances.  It is assumed the shift register is managed (and used) elsewhere and
 // a pointer to it is passed to the battery meter.
 ShiftRegister74HC595<numberOfShiftRegisters> shiftRegister(dataPin, clockPin, latchPin);
-BatteryMeterShiftRegister<numberOfShiftRegisters> meter(&shiftRegister, batteryMin, batteryMax, level);
+BatteryMeterShiftRegister<numberOfShiftRegisters> batteryMeter(&shiftRegister, batteryMin, batteryMax, level);
 
 // Create the button which determines when the meter is active.
 MomentaryButton activationButton(activationPin);
@@ -55,19 +55,19 @@ void setup()
 	#endif
 
 	// Set the input sensing pin (the pin should connect to the positve lead of the battery).
-	meter.setSensingPin(sensePin);
+	batteryMeter.setSensingPin(sensePin);
 	
 	// Set the light output pins.
-	meter.setLightPins(lightPins, HIGH);
+	batteryMeter.setLightPins(lightPins, HIGH);
 
 	// Add the button.
-	meter.setActivationButton(activationButton);
+	batteryMeter.setActivationButton(activationButton);
 
 	// Run the battery meter setup.
-	meter.begin();
+	batteryMeter.begin();
 }
 
 void loop()
 {
-	meter.update();
+	batteryMeter.update();
 }

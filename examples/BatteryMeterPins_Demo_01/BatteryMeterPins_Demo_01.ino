@@ -10,7 +10,7 @@
 
 // The LEVEL of the battery meter is the number of levels/divisions/lights that you have on your
 // meter.  So LEVEL5 is for five outputs or LEVEL3 for a 3 LED display.
-BatteryMeter::LEVEL level = BatteryMeter::LEVEL5;
+Battery::LEVEL level = Battery::LEVEL5;
 
 unsigned int lightPins[]	= {8, 9, 10, 11, 12};
 unsigned int sensePin		= A0;
@@ -26,7 +26,7 @@ int batteryMax	= 975;
 // Now we use all the items from the configuration section to build and run the example.
 
 // Set the min and max reading values that correspond to 2.7 and 4.2 volts (for a lithium battery).
-BatteryMeterPins meter(batteryMin, batteryMax, level);
+BatteryMeterPins batteryMeter(batteryMin, batteryMax, level);
 
 // Create the button which determines when the meter is active.
 MomentaryButton activationButton(activationPin);
@@ -38,19 +38,19 @@ void setup()
   #endif
 
 	// Set the input sensing pin.
-	meter.setSensingPin(sensePin);
+	batteryMeter.setSensingPin(sensePin);
 
 	// Set the light output pins.
-	meter.setLightPins(lightPins, HIGH);
+	batteryMeter.setLightPins(lightPins, HIGH);
 
 	// Add the button.
-	meter.setActivationButton(activationButton);
+	batteryMeter.setActivationButton(activationButton);
 
 	// Run the battery meter setup.
-	meter.begin();
+	batteryMeter.begin();
 }
 
 void loop()
 {
-	meter.update();
+	batteryMeter.update();
 }
