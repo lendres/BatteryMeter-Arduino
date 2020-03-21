@@ -35,7 +35,7 @@ int activationPin	= 5;
 // If you don't know what values to use, run the battery meter and with 2.7 volts connected and again
 // with 4.2 volts, while using debug messages, and note the readings.
 int batteryMin	= 650;
-int batteryMax	= 975;
+int batteryMax	= 1020;
 
 // EXAMPLE STARTS HERE
 // Now we use all the items from the configuration section to build and run the example.
@@ -62,6 +62,9 @@ void setup()
 
 	// Add the button.
 	batteryMeter.setActivationButton(activationButton);
+
+	// For purposes of demonstration, we will update faster than normal.
+	batteryMeter.setUpdateInterval(500);
 
 	// Run the battery meter setup.
 	batteryMeter.begin();

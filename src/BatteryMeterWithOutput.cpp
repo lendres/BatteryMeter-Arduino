@@ -97,19 +97,43 @@ void BatteryMeterWithOutput::update()
 	switch (_activationButton->getStatus())
 	{
 		case WASPRESSED:
+		{
 			// The button was just pressed, meter immediately.
+			#ifdef BATTERYMETERDEBUG
+				Serial.println("[BatteryMeter] Button Status: WASPRESSED");
+			#endif
 			meter(true);
 			break;
+		}
 
 		case ISPRESSED:
+		{
 			// The button is pressed, meter when the timer is up.
 			meter(false);
 			break;
+		}
+		
+		case WASSHORTPRESSED:
+		case WASLONGPRESSED:
+		{
+			// The button was just released, meter immediately.
+			#ifdef BATTERYMETERDEBUG
+				Serial.println("[BatteryMeter] Button Status: WASSHORTPRESSED or WASLONGPRESSED");
+			#endif
+			// Get new status.
+			BUTTONSTATUS newStatus = _activationButton->getStatus();
+			if (newStatus == BUTTONSTATUS::NOTPRESSED)
+			{
+				setLights(Battery::LEVEL0);
+			}
+			break;
+		}
 
-		default:
-			// Turn the lights off.
-			setLights(Battery::LEVEL0);
-
+		case NOTPRESSED:
+		{
+			// The button is not pressed, do nothing.
+			break;
+		}
 	}
 }
 

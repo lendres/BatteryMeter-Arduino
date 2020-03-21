@@ -46,7 +46,7 @@
 
 /*
 	If you want debugging messages printed to the serial monitor, enable the serial monitor and
-	uncomment the line:	
+	uncomment the line:
 	#define BATTERYMETERDEBUG
 */
 
