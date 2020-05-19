@@ -1,9 +1,13 @@
 # BatteryMeter
 
-A library for reading a voltage from a battery and displaying the results.  There are two output options.  The first is for turning on indicators attached to Arduino pins.  The second option outputs through a shift register.  These options are implemented as separate classes.
+A library for reading a voltage from a battery.  The value read can be return.  However, far more useful is the ability to read the battery voltage as a percentage full or have it automatically converted to a battery "level."  Levels divide the battery voltage into discrete units for displaying the voltage as indicator lights (similar to number of bars on a cell phone).
+
+The levels can be output from the Arduino as LEDs or some other method of displaying to the user the charged state of the battery.  For convenience, we will assume we are outputing to LEDs for here forward.  There are two output options.  The first is for turning on indicators attached to Arduino pins.  The second option outputs through a shift register.  These options are implemented as separate classes.
+
+This suite was designed to work with my ButtonSuite class.  The different types of buttons can be used to control the output behavior of the BatteryMeter.  The ButtonSuite has several button types (always on, momentary, toggle).  By passing the BatteryMeter different classes from the ButtonSuite the BatteryMeter meter can be made to be always on, turn on when a button is held down (momentary), or toggle on and off with button pushes.  This gives the user the option to very easily change the BatteryMeter display behavior.
 
 #### BatteryMeter
-Provides functionality to measure battery level.  Reads the sense pin (pin battery is connect to) and can return the read value or the value converted to a level (similar to bar level on a cell phone) or a percentage.
+Provides functionality to measure battery level.  Reads the sense pin (pin battery is connect to) and can return the read value, the value converted to a level, or the value converted to a percentage.
 
 #### BatteryMeterPins
 Outputs battery levels to Arduino pins.  Used, for example, to turn on LEDs cooresponding to the battery charge.  One LED on would be charge the battery and five LEDs would mean the battery is full (when using 5 battery levels).
