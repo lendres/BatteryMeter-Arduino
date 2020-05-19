@@ -115,7 +115,7 @@ unsigned int BatteryMeter::getBatteryPercentage()
 	if (sensePinReading < _batteryMin)
 	{
 		#ifdef BATTERYMETERDEBUG
-			Serial.print("[BatteryMeter] Percentage: 0");
+			Serial.println("[BatteryMeter] Percentage: 0");
 		#endif
 		return 0;
 	}
@@ -123,12 +123,12 @@ unsigned int BatteryMeter::getBatteryPercentage()
 	if (sensePinReading > _batteryMax)
 	{
 		#ifdef BATTERYMETERDEBUG
-			Serial.print("[BatteryMeter] Percentage: 100");
+			Serial.println("[BatteryMeter] Percentage: 100");
 		#endif
 		return 100;
 	}
 
-	unsigned int percentage = (sensePinReading - _batteryMin) / (_batteryMax - _batteryMin);
+	unsigned int percentage = 100.0 * (sensePinReading - _batteryMin) / (_batteryMax - _batteryMin);
 
 	#ifdef BATTERYMETERDEBUG
 		Serial.print("[BatteryMeter] Percentage: ");

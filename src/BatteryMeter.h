@@ -53,7 +53,7 @@
 #ifndef BATTERYMETERBASE_H
 #define BATTERYMETERBASE_H
 
-#define BATTERYMETERDEBUG
+//#define BATTERYMETERDEBUG
 
 #include <Arduino.h>
 #include "SimpleButton.h"
