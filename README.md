@@ -2,11 +2,14 @@
 
 A library for reading a voltage from a battery and displaying the results.  There are two output options.  The first is for turning on indicators attached to Arduino pins.  The second option outputs through a shift register.  These options are implemented as separate classes.
 
+#### BatteryMeter
+Provides functionality to measure battery level.  Reads the sense pin (pin battery is connect to) and can return the read value or the value converted to a level (similar to bar level on a cell phone) or a percentage.
+
 #### BatteryMeterPins
-Outputs battery levels directly through Arduino pins.
+Outputs battery levels to Arduino pins.  Used, for example, to turn on LEDs cooresponding to the battery charge.  One LED on would be charge the battery and five LEDs would mean the battery is full (when using 5 battery levels).
 
 #### BatteryMeterShiftRegister
-Outputs battery levels through a shift register.
+Outputs battery levels through a shift register.  Functionality is the same as BatteryMeterPins, but used when the output is on a shift register.
 
 
 ## About the Library
