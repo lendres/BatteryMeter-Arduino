@@ -26,6 +26,7 @@ https://github.com/lendres/BatteryMeter-Arduino
 
 To output through a shift register, the following library is required:
 
+* [ButtonSuite](https://github.com/lendres/ButtonSuite-Arduino) - Arduino Button Library
 * [ShiftRegister74HC595](https://timodenk.com/blog/shift-register-arduino-library/) - ShiftRegister74HC595 Arduino Library
 
 
