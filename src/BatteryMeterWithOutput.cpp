@@ -137,6 +137,12 @@ void BatteryMeterWithOutput::update()
 	}
 }
 
+void BatteryMeterWithOutput::updateNow()
+{
+	// We need an immediate metering, for run meter with forcedRun set to true.
+	meter(true);
+}
+
 #ifdef BATTERYMETERDEBUG
 void BatteryMeterWithOutput::printPinState(int pin, bool on)
 {

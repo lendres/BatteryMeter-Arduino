@@ -63,8 +63,13 @@ class BatteryMeterWithOutput : public BatteryMeter
 
 	// Loop functions.  Run these functions in your "loop" routine.
 	public:
-		// Entry point to the battery meter.  Checks for any state changes and updates accordingly.
+		// Entry point to the battery meter.  Checks for any state changes and updates accordingly.  This runs on a timer and only updates
+		// on a time out.  This is prevent flickering of the lights when the battery measurement is near the border of two levels.  The
+		// reading has a small variablity to it.
 		void update();
+
+		// If you need to run the meter immediately and not wait for the time out, use this version.
+		void updateNow();
 
 	// Protected debugging functions.  Used by the derived classes.
 	protected:
