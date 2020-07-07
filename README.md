@@ -1,6 +1,6 @@
 # BatteryMeter
 
-A library for reading a voltage from a battery.  The value read can be return.  However, far more useful is the ability to read the battery voltage as a the percent charged or have it automatically converted to a battery "level."  Levels divide the battery voltage into discrete units for displaying the voltage as indicator lights (similar to number of bars on a cell phone).
+A library for reading a voltage from a battery.  The value can be return as a raw reading from an analog pin.  However, far more useful is the ability to read the battery voltage as a the percent charged or have it automatically converted to a battery "level."  Levels divide the battery voltage into discrete units for displaying the voltage as indicator lights (similar to number of bars on a cell phone).
 
 The library works by reading the voltage on an analog pin and converting the value.  DC voltages between 0-5 volts can be read from a 5 volt Arduino.  For batteries with higher voltages, a voltage divider can be used to bring the voltage into the range of the Arduino.
 
