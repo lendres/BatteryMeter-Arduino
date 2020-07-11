@@ -97,7 +97,7 @@ class BatteryMeter
 	// The underscore denotes a variable that belongs to the class (not a local variable).
 	protected:
 		// Number of levels which is the number of output segments or LEDs.
-		Battery::LEVEL		_maxLevel;
+		Battery::LEVEL			_maxLevel;
 
 	private:
 		// The reading that is considered fully discharged.  This is 2.7 volts for a lithium battery.
